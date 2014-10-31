@@ -17,6 +17,7 @@ iiiiiiiiaaaaaaaabbbbbbbbcccccccc
 
 # Instruction set
 ## 0X - Special reserved
+	00 - Halt execution
 	01 -
 	0A - Next Register set
 	0B - Previous register set
@@ -66,6 +67,6 @@ iiiiiiiiaaaaaaaabbbbbbbbcccccccc
 
 
 ## 8X - IO Operations
-	81 - Print a as integer
-	82 - Print a as char
+	81 - Print register a as integer
+	82 - Print register a as char
 ##

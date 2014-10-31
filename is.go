@@ -7,6 +7,8 @@ import (
 
 func sodaIS(ins byte) Operation {
 	switch ins {
+	case 0x00:
+		return halt
 	case 0x10:
 		return zero
 	// case 0x11:
@@ -77,6 +79,11 @@ func sodaIS(ins byte) Operation {
 
 func undefined(v *vm, a, b, c byte) error {
 	panic(UndefinedBehaviour)
+}
+
+func halt(v *vm, a, b, c byte) error {
+	v.halting = true
+	return nil
 }
 
 func nRegSet(v *vm, a, b, c byte) error {
