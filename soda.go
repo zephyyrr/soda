@@ -68,6 +68,8 @@ func (v *vm) Execute() error {
 	return nil
 }
 
+const MagicBytes word = 0x534F4441 // "SODA"
+
 func (v *vm) verify() bool {
 	var w word
 
@@ -76,5 +78,5 @@ func (v *vm) verify() bool {
 		return false
 	}
 
-	return w == 0x534F4441 // "SODA"
+	return w == MagicBytes
 }
