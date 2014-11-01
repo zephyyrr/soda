@@ -51,7 +51,8 @@ footer {
 	min-height:100%;
 	position:relative;
 }
-#content h2{
+
+#content {
 	background:#ff0;
 	padding:10px;
 }
