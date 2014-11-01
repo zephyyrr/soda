@@ -12,6 +12,11 @@ body {
 	margin: 0px auto;
 }
 
+h1, h2 {
+	margin: 0px auto;
+	color: #FF8A05;
+}
+
 p {
 	max-width: 20em;
 	margin: 0px auto;
