@@ -16,12 +16,12 @@ h1, h2 {
 	/*margin: 0px 2em;*/
 	text-align: center;
 	color: #FF8A05;
-	-webkit-text-stroke: 2px #FFBA6B;
+	-webkit-text-stroke: 2px #FFA742;
 	text-shadow:
-		-1px -1px 0 #FFBA6B,
-		1px -1px 0 #FFBA6B,
-		-1px 1px 0 #FFBA6B,
-		1px 1px 0 #FFBA6B;
+		-1px -1px 0 #FFA742,
+		1px -1px 0 #FFA742,
+		-1px 1px 0 #FFA742,
+		1px 1px 0 #FFA742;
 }
 
 p {
