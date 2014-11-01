@@ -1,0 +1,9 @@
+body {
+	background-color: #885;
+	color: #112;
+}
+
+p {
+	max-width: 20em;
+	margin: 0px auto;
+}
