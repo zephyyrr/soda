@@ -13,7 +13,8 @@ body {
 }
 
 h1, h2 {
-	margin: 0px 2em;
+	/*margin: 0px 2em;*/
+	text-align: center;
 	color: #FF8A05;
 }
 
