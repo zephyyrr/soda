@@ -40,7 +40,7 @@ p {
 	margin: 0px auto;
 }
 
-#content, footer {
+#wrapper, footer {
 	max-width: 25em;
 	margin: 0px auto;
 	padding: 1em 0em;
