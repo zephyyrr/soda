@@ -3,6 +3,12 @@ body {
 	color: #112;
 }
 
+#content {
+	height: 95%;
+	background-color: #EED;
+	border-radius: 10px;
+}
+
 p {
 	max-width: 20em;
 	margin: 0px auto;
