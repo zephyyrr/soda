@@ -3,13 +3,16 @@ body {
 	color: #112;
 }
 
+#content, footer {
+	max-width: 25em;
+	margin: 0px auto;
+	padding: 1em 0em;
+}
+
 #content {
 	height: 95%;
 	background-color: #EED;
 	border-radius: 10px;
-	max-width: 25em;
-	padding: 1em 0em;
-	margin: 0px auto;
 }
 
 h1, h2 {
@@ -27,4 +30,8 @@ h1, h2 {
 p {
 	max-width: 20em;
 	margin: 0px auto;
+}
+
+footer {
+	color: #EED;
 }
