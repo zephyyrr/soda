@@ -1,0 +1,19 @@
+[
+	{
+		"name": "Home",
+		"url": "/"
+	},
+
+	{
+		"name": "Downloads",
+		"url": "/downloads"
+	},
+	{
+		"name": "Instructions",
+		"url": "/is"
+	},
+	{
+		"name": "ASM",
+		"url": "/aspartasm"
+	}
+]

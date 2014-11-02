@@ -16,6 +16,17 @@
 				<h1>Soda VM</h1>
 			</div>
 
+			<div id="top-menu">
+				<ul class="menu">
+					{% for item in site.data.menu %}
+					<li>
+						<a href="/soda{{item.url}}">
+						{{item.name}}
+						</a>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
 			<div id="content">
 				<h2>{{ page.title }}</h2>
 
