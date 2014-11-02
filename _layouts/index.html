@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>Soda VM - {{ page.title }}</title>
-		<link rel="stylesheet" type="text/css" href="styles/common.css">
+		<link rel="stylesheet" type="text/css" href="/soda/styles/common.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
 
@@ -20,8 +20,8 @@
 				<ul class="menu">
 					{% for item in site.data.menu %}
 					<li>
-						<a href="/soda{{item.url}}">
-						{{item.name}}
+						<a href="/soda{{ item.url }}">
+						{{ item.name }}
 						</a>
 					</li>
 					{% endfor %}
