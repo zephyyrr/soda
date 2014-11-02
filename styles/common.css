@@ -1,5 +1,6 @@
 html {
 	background-image: url("/soda/images/soda_foam.png");
+	background-repeat: repeat-x;
 }
 
 html, body {
@@ -12,7 +13,7 @@ html, body {
 	height:100%;
 }
 
-body, footer {
+body {
 	background-image: url("/soda/images/soda_bubbles.png");
 }
 
