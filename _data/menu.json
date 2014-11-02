@@ -1,7 +1,7 @@
 [
 	{
 		"name": "Home",
-		"url": "/"
+		"url": "/soda/"
 	},
 
 	{
@@ -10,10 +10,10 @@
 	},
 	{
 		"name": "Instructions",
-		"url": "/is"
+		"url": "/soda/is/"
 	},
 	{
 		"name": "Examples",
-		"url": "/examples"
+		"url": "/soda/examples/"
 	}
 ]
