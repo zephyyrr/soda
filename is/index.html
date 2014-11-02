@@ -3,18 +3,20 @@ layout: index
 title: Instruction Set
 ---
 
-<table>
+<table id="operations">
 	<thead>
 		<tr>
 			<th>Instruction</th>
+			<th>Syntax</th>
 			<th>Description</th>
 		</tr>
 	</thead>
 	<tbody>
 		{% for operation in site.data.operations %}
 		<tr>
-			<th> {{ operation.asm }} ({{ operation.byte }}) </th>
-			<td> {{ operation.description }} </td>
+			<th>{{ operation.asm }} ({{ operation.byte }})</th>
+			<td>{{ operation.syntax }}</td>
+			<td>{{ operation.description }}</td>
 		</tr>
 		{% endfor %}
 	</tbody>

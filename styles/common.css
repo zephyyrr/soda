@@ -79,6 +79,14 @@ p {
 	padding: 0.5em 0;
 }
 
+table #operations thead {
+	background-color: #FF8A05;
+}
+
+table #operations th {
+	padding: 0 3px;
+}
+
 footer {
 	color: #EED;
 
