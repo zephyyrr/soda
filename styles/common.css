@@ -32,10 +32,6 @@ h1, h2 {
  Menu styling
 */
 
-.menu {
-
-}
-
 .menu ul {
 	color: #EED;
 	list-style-type: none;
@@ -48,7 +44,7 @@ h1, h2 {
 .menu a {
 	color: #EED;
     float: left;
-    min-width: 6em;
+    min-width: 3em;
     text-decoration: none;
     background-color: #3B1F00;
     padding: 0.2em 0.6em;
