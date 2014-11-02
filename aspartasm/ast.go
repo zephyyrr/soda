@@ -6,7 +6,7 @@ type ast struct {
 }
 
 func newAst() *ast {
-	return &ast{token{unknown, "root"}}
+	return &ast{token{unknown, "root"}, nil}
 }
 
 //Appends the token to the tree as a child node.
