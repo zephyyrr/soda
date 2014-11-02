@@ -28,15 +28,34 @@ h1, h2 {
 		1px 1px 0 #FFA742;
 }
 
+/*
+ Menu styling
+*/
+
 .menu {
 
 }
 
-#top-meny .menu {
+.menu ul {
+	color: #EED;
 
+	list-style-type: none;
+
+	padding: 0 10px;
+	border-radius: 20px;
+	border-style: white;
+	border-width: 2px;
 }
 
-#content, footer {
+.menu li {
+	display: inline;
+}
+
+/*
+ Content styling
+*/
+
+#top-menu, #content, footer {
 	max-width: 25em;
 	margin: 0px auto;
 	padding: 10px
