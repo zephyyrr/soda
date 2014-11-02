@@ -2,7 +2,7 @@
 	{
 		"asm": "HALT",
 		"byte": "0x00",
-		"syntax": "HALT"
+		"syntax": "HALT",
 		"description": "Halts execution."
 	},
 
@@ -25,5 +25,5 @@
 		"byte": "0x12",
 		"syntax": "SUB ra rb rc",
 		"description": "ra = rb - rc"
-	},
+	}
 ]
