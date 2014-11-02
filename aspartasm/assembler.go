@@ -8,10 +8,12 @@ import (
 
 func Assemble(in io.Reader, out io.Writer) error {
 	tokens := lex(in)
-	instructions, err := parse(tokens)
+	ast, err := parse(tokens)
 	if err != nil {
 		return err
 	}
+
+	instructions, err := linearize(ast)
 
 	binary.Write(out, binary.BigEndian, soda.MagicBytes)
 
@@ -22,8 +24,37 @@ func Assemble(in io.Reader, out io.Writer) error {
 	return nil
 }
 
-func parse(<-chan token) (ins []soda.Instruction, err error) {
-	ins = append(ins, soda.Instruction{0x53, 0, 0, 65})
-	ins = append(ins, soda.Instruction{0x82, 0, 0, 0})
+func parse(<-chan token) (tree ast, err error) {
+
 	return
+}
+
+func linearize(tree ast) (ins []soda.Instruction, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			if err, ok := r.(error); ok {
+				err = r
+			} else {
+				panic(r)
+			}
+		}
+	}()
+	for _, ch := range tree.children {
+		ins = append(ins, linearize_rec(tree, &soda.Instruction{}, 0))
+	}
+}
+
+func linearize_rec(tree ast, curr *soda.Instruction, i int) soda.Instruction {
+	switch tree.token.kind {
+	case operation:
+		op, err := MapOperation(tree.token.value)
+		if err != nil {
+			panic(err)
+		}
+		curr = &soda.Instruction{op, 0, 0, 0}
+		for i, ch := range tree.children {
+			linearize_rec(ch, curr, i)
+		}
+
+	}
 }
