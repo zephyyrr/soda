@@ -79,12 +79,16 @@ p {
 	padding: 0.5em 0;
 }
 
-table #operations thead {
+table #operations {
+	width: 100%;
+}
+
+table #operations thead tr {
 	background-color: #FF8A05;
 }
 
 table #operations th {
-	padding: 0 3px;
+	padding: 0 10px;
 }
 
 footer {
