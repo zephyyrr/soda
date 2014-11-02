@@ -79,15 +79,15 @@ p {
 	padding: 0.5em 0;
 }
 
-table #operations {
+table#operations {
 	width: 100%;
 }
 
-table #operations thead tr {
+table#operations thead tr {
 	background-color: #FF8A05;
 }
 
-table #operations th {
+table#operations th {
 	padding: 0 10px;
 }
 
