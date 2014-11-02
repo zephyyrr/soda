@@ -22,22 +22,19 @@ h1, h2 {
 #content, footer {
 	max-width: 25em;
 	margin: 0px auto;
-	padding: 1em 0em;
+	padding: 10px
 }
 
 #content {
 	height: 70%;
 	background-color: #EED;
 	border-radius: 10px;
-
-	/* Footer fix */
-	padding:10px;
-	margin-bottom:3em;   /* Height of the footer */
 }
 
 p {
 	max-width: 20em;
 	margin: 0px auto;
+	padding: 0.5em 0;
 }
 
 footer {
