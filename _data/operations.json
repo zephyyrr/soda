@@ -1,0 +1,29 @@
+[
+	{
+		"asm": "HALT",
+		"byte": "0x00",
+		"syntax": "HALT"
+		"description": "Halts execution."
+	},
+
+	{
+		"asm": "ZERO",
+		"byte": "0x10",
+		"syntax": "ZERO ra",
+		"description": "Multiplies ra with 0."
+	},
+
+	{
+		"asm": "ADD",
+		"byte": "0x11",
+		"syntax": "ADD ra rb rc",
+		"description": "ra = rb + rc"
+	},
+
+	{
+		"asm": "SUB",
+		"byte": "0x12",
+		"syntax": "SUB ra rb rc",
+		"description": "ra = rb - rc"
+	},
+]
