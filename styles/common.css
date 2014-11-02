@@ -46,10 +46,11 @@ h1, h2 {
     float: left;
     min-width: 3em;
     text-decoration: none;
+    text-align: center;
     background-color: #3B1F00;
-    padding: 0.2em 0.6em;
+    padding: 0.2em 0.2em;
     border-radius: 20px;
-    border: 1px solid white;
+    border: 1px solid #EED;
 }
 
 a:hover {
@@ -61,7 +62,7 @@ a:hover {
 */
 
 #top-menu, #content, footer {
-	max-width: 25em;
+	max-width: 30em;
 	margin: 0px auto;
 	padding: 10px
 }
@@ -73,7 +74,7 @@ a:hover {
 }
 
 p {
-	max-width: 20em;
+	max-width: 25em;
 	margin: 0px auto;
 	padding: 0.5em 0;
 }
