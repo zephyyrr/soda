@@ -6,14 +6,14 @@
 
 	{
 		"name": "Downloads",
-		"url": "/downloads"
+		"url": "https://github.com/zephyyrr/soda/releases"
 	},
 	{
 		"name": "Instructions",
 		"url": "/is"
 	},
 	{
-		"name": "ASM",
-		"url": "/aspartasm"
+		"name": "Examples",
+		"url": "/examples"
 	}
 ]
