@@ -38,17 +38,26 @@ h1, h2 {
 
 .menu ul {
 	color: #EED;
-
 	list-style-type: none;
-
-	padding: 0 10px;
-	border-radius: 20px;
-	border-style: white;
-	border-width: 2px;
 }
 
 .menu li {
 	display: inline;
+}
+
+.menu a {
+	color: #EED;
+    float: left;
+    min-width: 6em;
+    text-decoration: none;
+    background-color: #3B1F00;
+    padding: 0.2em 0.6em;
+    border-radius: 20px;
+    border: 1px solid white;
+}
+
+a:hover {
+    background-color: #4c2d00;
 }
 
 /*
