@@ -1,3 +1,7 @@
+html {
+	background-image: url("/soda/images/soda_foam.png");
+}
+
 html, body {
 	background-color: #3B1F00;
 	color: #112;
@@ -6,6 +10,10 @@ html, body {
 	margin:0;
 	padding:0;
 	height:100%;
+}
+
+body {
+	background-image: url("/soda/images/soda_bubbles.png");
 }
 
 h1, h2 {
@@ -17,6 +25,14 @@ h1, h2 {
 		1px -1px 0 #FFA742,
 		-1px 1px 0 #FFA742,
 		1px 1px 0 #FFA742;
+}
+
+.menu {
+
+}
+
+#top-meny .menu {
+
 }
 
 #content, footer {
