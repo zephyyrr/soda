@@ -14,5 +14,11 @@ func newAst() *ast {
 func (a *ast) append(t token) *ast {
 	child := ast{t, nil}
 	a.children = append(a.children, child)
-	return &child
+	return &a.children[len(a.children)-1]
+}
+
+func (a *ast) appendAll(ts ...token) {
+	for _, t := range ts {
+		a.append(t)
+	}
 }
