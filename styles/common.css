@@ -74,7 +74,7 @@ a:hover {
 */
 
 #top-menu, #content, footer {
-	max-width: 30em;
+	max-width: 40em;
 	margin: 0px auto;
 	padding: 10px
 }
@@ -101,10 +101,13 @@ table#operations thead tr {
 
 table#operations th {
 	padding: 0 10px;
+	min-width: 10em;
 }
 
 footer {
 	color: #EED;
+	padding: 0;
+	padding-top: 5px;
 
 	/* Footer fix */
 	left:auto;
