@@ -10,9 +10,6 @@ html, body {
 
 body {
 	background-image: url("/soda/images/soda_bubbles.png");
-}
-
-#wrapper {
 	/* Footer fix */
 	margin:0;
 	padding:0;
