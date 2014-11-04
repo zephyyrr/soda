@@ -1,20 +1,17 @@
 html {
 	background-image: url("/soda/images/soda_bubbles.png");
+	background-color: #3B1F00;
+	color: #112;
 }
 
 #foam {
 	background-image: url("/soda/images/soda_foam.png");
 	background-repeat: repeat-x;
-	height: 50px;
+	height: 20px;
 	width: 100%;
 	position: absolute;
 	top: 0;
 	left: 0;
-}
-
-html, body {
-	background-color: #3B1F00;
-	color: #112;
 }
 
 body {
