@@ -41,10 +41,11 @@ type vm struct {
 
 func New(code tape, options Options) *vm {
 	v := &vm{
-		code:    code,
-		is:      sodaIS,
-		halting: false,
-		options: options,
+		code:     code,
+		is:       sodaIS,
+		halting:  false,
+		options:  options,
+		messages: make(chan string, 1),
 	}
 	v.regs = &v.regsets[v.currset]
 	return v
@@ -67,7 +68,8 @@ func (v *vm) Execute() error {
 		operation := v.is(ins.Operation)
 
 		if v.options.Debug {
-			//GetCommand()
+			var char rune
+			fmt.Scan(char)
 		}
 
 		if err := operation(v, ins.A, ins.B, ins.C); err != nil {
@@ -83,11 +85,19 @@ func (v *vm) Messages() <-chan string {
 }
 
 func (v *vm) sendMessage(vals ...interface{}) {
-	v.messages <- fmt.Sprintln(vals...)
+	select {
+	case v.messages <- fmt.Sprint(vals...):
+	default:
+	}
+
+}
+
+func (v *vm) sendMessageln(vals ...interface{}) {
+	v.sendMessage(fmt.Sprintln(vals...))
 }
 
 func (v *vm) sendMessagef(format string, vals ...interface{}) {
-	v.messages <- fmt.Sprintf(format, vals...)
+	v.sendMessage(fmt.Sprintf(format, vals...))
 }
 
 const MagicBytes word = 0x534F4441 // "SODA"
