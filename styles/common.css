@@ -1,6 +1,7 @@
 html {
 	background-image: url("/soda/images/soda_foam.png");
 	background-repeat: repeat-x;
+	height: 100%;
 }
 
 html, body {
@@ -10,13 +11,18 @@ html, body {
 
 body {
 	background-image: url("/soda/images/soda_bubbles.png");
+	/* Footer fix */
+	margin:0;
+	padding:0;
+	min-height:100%;
 }
 
 #wrapper {
 	/* Footer fix */
 	margin:0;
 	padding:0;
-	height:100%;
+	min-height:100%;
+	position: relative;
 }
 
 h1, h2 {
@@ -73,6 +79,8 @@ a:hover {
 	min-height: 70%;
 	background-color: #EED;
 	border-radius: 10px;
+	margin-bottom: 3em;
+	overflow: scroll;
 }
 
 p {
@@ -97,9 +105,14 @@ footer {
 	color: #EED;
 
 	/* Footer fix */
+	position:absolute;
 	left:auto;
 	bottom:0;
 	right: 0;
 	width:100%;
-	min-height:3em;   /* Height of the footer */
+	height:3em;   /* Height of the footer */
+}
+
+footer #copyright {
+	margin: 0 auto;
 }
