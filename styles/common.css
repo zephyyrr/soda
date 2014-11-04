@@ -68,7 +68,7 @@ a:hover {
 }
 
 #content {
-	height: 70%;
+	min-height: 70%;
 	background-color: #EED;
 	border-radius: 10px;
 }
