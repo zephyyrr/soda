@@ -7,9 +7,9 @@ import (
 	"strings"
 )
 
-type token struct {
-	kind  string
-	value string
+type Token struct {
+	Kind  string
+	Value string
 }
 
 const (
@@ -21,9 +21,9 @@ const (
 	sträng    = "string"
 )
 
-func lex(in io.Reader) <-chan token {
+func lex(in io.Reader) <-chan Token {
 	bufd := bufio.NewReader(in)
-	tokens := make(chan token, 3)
+	tokens := make(chan Token, 3)
 
 	go func() {
 		for {
@@ -38,30 +38,30 @@ func lex(in io.Reader) <-chan token {
 
 			if strings.HasSuffix(s, ":") {
 				s = strings.TrimRight(s, ":")
-				tokens <- token{label, s[:len(s)-2]}
+				tokens <- Token{label, s[:len(s)-2]}
 				continue
 			}
 			if _, err := MapOperation(s); err != nil {
-				tokens <- token{operation, s}
+				tokens <- Token{operation, s}
 				continue
 			}
 
 			if strings.HasPrefix(s, "r") {
-				tokens <- token{register, s}
+				tokens <- Token{register, s}
 				continue
 			}
 
 			if _, err := strconv.Atoi(s); err != nil {
-				tokens <- token{number, s}
+				tokens <- Token{number, s}
 			}
 
 			if strings.HasPrefix(s, "\"") &&
 				strings.HasSuffix(s, "\"") {
-				tokens <- token{sträng, s[1 : len(s)-2]}
+				tokens <- Token{sträng, s[1 : len(s)-2]}
 				continue
 			}
 
-			tokens <- token{unknown, s}
+			tokens <- Token{unknown, s}
 		}
 	}()
 

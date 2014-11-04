@@ -10,16 +10,14 @@ import (
 )
 
 func Assemble(in io.Reader, out io.Writer) error {
-	tokens := lex(in)
-	ast, err := parse(tokens)
+	ast, err := Parse(in)
 	if err != nil {
 		return err
 	}
-
 	return AssembleAst(ast, out)
 }
 
-func AssembleAst(tree ast, out io.Writer) error {
+func AssembleAst(tree AST, out io.Writer) error {
 	instructions, err := Linearize(tree)
 	if err != nil {
 		return err
@@ -34,26 +32,32 @@ func AssembleAst(tree ast, out io.Writer) error {
 	return nil
 }
 
-func parse(<-chan token) (tree ast, err error) {
-	tree.append(token{operation, "LDI"}).appendAll(
-		token{register, "r0"},
-		token{number, "257"})
-
-	tree.append(token{operation, "LDI"}).
-		appendAll(token{register, "r1"},
-		token{number, "1"})
-
-	tree.append(token{operation, "ADD"}).
-		appendAll(token{register, "r2"},
-		token{register, "r0"},
-		token{register, "r1"})
-
-	tree.append(token{operation, "PRNI"}).
-		append(token{register, "r2"})
+func Parse(in io.Reader) (tree AST, err error) {
+	tokens := lex(in)
+	tree, err = parse(tokens)
 	return
 }
 
-func Linearize(tree ast) (ins []soda.Instruction, err error) {
+func parse(<-chan Token) (tree AST, err error) {
+	tree.append(Token{operation, "LDI"}).appendAll(
+		Token{register, "r0"},
+		Token{number, "257"})
+
+	tree.append(Token{operation, "LDI"}).
+		appendAll(Token{register, "r1"},
+		Token{number, "1"})
+
+	tree.append(Token{operation, "ADD"}).
+		appendAll(Token{register, "r2"},
+		Token{register, "r0"},
+		Token{register, "r1"})
+
+	tree.append(Token{operation, "PRNI"}).
+		append(Token{register, "r2"})
+	return
+}
+
+func Linearize(tree AST) (ins []soda.Instruction, err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			if err2, ok := r.(error); ok {
@@ -63,7 +67,7 @@ func Linearize(tree ast) (ins []soda.Instruction, err error) {
 			}
 		}
 	}()
-	for _, ch := range tree.children {
+	for _, ch := range tree.Children {
 		in, err := linearize_rec(ch, soda.Instruction{}, 0)
 		if err != nil {
 			return ins, err
@@ -74,16 +78,16 @@ func Linearize(tree ast) (ins []soda.Instruction, err error) {
 	return
 }
 
-func linearize_rec(tree ast, curr soda.Instruction, i int) (soda.Instruction, error) {
+func linearize_rec(tree AST, curr soda.Instruction, i int) (soda.Instruction, error) {
 	var err error
-	switch tree.token.kind {
+	switch tree.Token.Kind {
 	case operation:
 		var err error
-		curr.Operation, err = MapOperation(tree.token.value)
+		curr.Operation, err = MapOperation(tree.Token.Value)
 		if err != nil {
 			return curr, err
 		}
-		for i, ch := range tree.children {
+		for i, ch := range tree.Children {
 			curr, err = linearize_rec(ch, curr, i)
 			if err != nil {
 				return curr, err
@@ -94,16 +98,16 @@ func linearize_rec(tree ast, curr soda.Instruction, i int) (soda.Instruction, er
 	case register:
 		switch i {
 		case 0:
-			curr.A, err = RegisterLookup(tree.value)
+			curr.A, err = RegisterLookup(tree.Value)
 		case 1:
-			curr.B, err = RegisterLookup(tree.value)
+			curr.B, err = RegisterLookup(tree.Value)
 		case 2:
-			curr.C, err = RegisterLookup(tree.value)
+			curr.C, err = RegisterLookup(tree.Value)
 		}
 		return curr, err
 	case number:
 		//Place number in slots B and C
-		num, _ := strconv.Atoi(tree.token.value)
+		num, _ := strconv.Atoi(tree.Token.Value)
 		curr.B = byte(num >> 8)
 		curr.C = byte(num)
 	}

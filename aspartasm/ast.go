@@ -1,23 +1,23 @@
 package aspartasm
 
-type ast struct {
-	token
-	children []ast
+type AST struct {
+	Token    `json:"Token"`
+	Children []AST
 }
 
-func newAst() *ast {
-	return &ast{token{unknown, "root"}, nil}
+func newAst() *AST {
+	return &AST{Token{unknown, "root"}, nil}
 }
 
-//Appends the token to the tree as a child node.
+//Appends the Token to the tree as a child node.
 //Returns the new child node.
-func (a *ast) append(t token) *ast {
-	child := ast{t, nil}
-	a.children = append(a.children, child)
-	return &a.children[len(a.children)-1]
+func (a *AST) append(t Token) *AST {
+	child := AST{t, nil}
+	a.Children = append(a.Children, child)
+	return &a.Children[len(a.Children)-1]
 }
 
-func (a *ast) appendAll(ts ...token) {
+func (a *AST) appendAll(ts ...Token) {
 	for _, t := range ts {
 		a.append(t)
 	}
