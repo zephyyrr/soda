@@ -1,8 +1,4 @@
-LDI r3 loop
-loop:
-LDI r0 65
-LDI r2 0
-LDI r1 3
-PRINC r0
-JMPN r3 r1 r0
-HALT
+LDI 0 1
+LDI 1 2
+ADD 2 0 1
+PRNI 2
