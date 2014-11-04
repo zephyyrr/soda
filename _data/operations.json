@@ -8,6 +8,30 @@
 	},
 
 	{
+		"asm": "NRS",
+		"byte": "0x0A",
+		"syntax": "PRS",
+		"implemented": true,
+		"description": "Changes current register set to next in order."
+	},
+
+	{
+		"asm": "PRS",
+		"byte": "0x0B",
+		"syntax": "NRS",
+		"implemented": true,
+		"description": "Changes current register set to previous in order."
+	},
+
+	{
+		"asm": "MOVS",
+		"byte": "0x0C",
+		"syntax": "MOVS ra rb rc",
+		"implemented": true,
+		"description": "Moves (copies) register rc from register set rb to register rc in register set ra"
+	},
+
+	{
 		"asm": "ZERO",
 		"byte": "0x10",
 		"syntax": "ZERO ra",
@@ -198,28 +222,100 @@
 		"implemented": false,
 		"description": "M[rb+rc] = lower byte of ra"
 	},
+
+	{
+		"asm": "JMP",
+		"byte": "0x61",
+		"syntax": "JMP ra",
+		"implemented": true,
+		"description": "Execution jumps to address in ra"
+	},
+
+	{
+		"asm": "JMPE",
+		"byte": "0x62",
+		"syntax": "JMPE ra rb rc",
+		"implemented": true,
+		"description": "Execution jumps to address in ra iff rb = rc"
+	},
+
+	{
+		"asm": "JMPN",
+		"byte": "0x63",
+		"syntax": "JMPN ra rb rc",
+		"implemented": false,
+		"description": "Execution jumps to address in ra iff rb =/= rc"
+	},
+
+	{
+		"asm": "JMPL",
+		"byte": "0x63",
+		"syntax": "JMPL ra rb rc",
+		"implemented": true,
+		"description": "Execution jumps to address in ra iff rb < rc"
+	},
+
+	{
+		"asm": "JMPLE",
+		"byte": "0x63",
+		"syntax": "JMPLE ra rb rc",
+		"implemented": true,
+		"description": "Execution jumps to address in ra iff rb <= rc"
+	},
+
+	{
+		"asm": "BRA",
+		"byte": "0x68",
+		"syntax": "BRA ra",
+		"implemented": true,
+		"description": "Execution jumps to offset in ra"
+	},
+
+	{
+		"asm": "BRAE",
+		"byte": "0x69",
+		"syntax": "BRAE ra rb rc",
+		"implemented": true,
+		"description": "Execution jumps to offset in ra iff rb = rc"
+	},
+
+	{
+		"asm": "BRAN",
+		"byte": "0x6A",
+		"syntax": "BRAN ra rb rc",
+		"implemented": false,
+		"description": "Execution jumps to offset in ra iff rb =/= rc"
+	},
+
+	{
+		"asm": "BRAL",
+		"byte": "0x6B",
+		"syntax": "BRAL ra rb rc",
+		"implemented": true,
+		"description": "Execution jumps to offset in ra iff rb < rc"
+	},
+
+	{
+		"asm": "BRALE",
+		"byte": "0x6C",
+		"syntax": "BRALE ra rb rc",
+		"implemented": true,
+		"description": "Execution jumps to offset in ra iff rb <= rc"
+	},
+
+	{
+		"asm": "PRNI",
+		"byte": "0x81",
+		"syntax": "PRNI ra",
+		"implemented": true,
+		"description": "Prints value in ra formatted as decimal integer"
+	},
+
+	{
+		"asm": "PRNC",
+		"byte": "0x82",
+		"syntax": "PRNC ra",
+		"implemented": true,
+		"description": "Prints value in ra formatted as a ASCII encoded character."
+	},
 ]
-
-00 - Halt execution
-01 -
-0A - Next Register set
-0B - Previous register set
-0C - Clone register (from one set to another)
-
-56 - Store
-57 - Store byte
-
-61 - uncoditional jump
-62 - jump if equals
-63 - jump if not equals
-64 - jump if less than
-65 - jump if less than or equals
-
-68 - branch
-69 - branch if equals
-6A - branch if not equals
-6B - branch if less than
-6C - branch if less than or equals
-
-81 - Print register a as integer
-82 - Print register a as char
