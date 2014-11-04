@@ -32,31 +32,6 @@ func AssembleAst(tree AST, out io.Writer) error {
 	return nil
 }
 
-func Parse(in io.Reader) (tree AST, err error) {
-	tokens := lex(in)
-	tree, err = parse(tokens)
-	return
-}
-
-func parse(<-chan Token) (tree AST, err error) {
-	tree.append(Token{operation, "LDI"}).appendAll(
-		Token{register, "r0"},
-		Token{number, "257"})
-
-	tree.append(Token{operation, "LDI"}).
-		appendAll(Token{register, "r1"},
-		Token{number, "1"})
-
-	tree.append(Token{operation, "ADD"}).
-		appendAll(Token{register, "r2"},
-		Token{register, "r0"},
-		Token{register, "r1"})
-
-	tree.append(Token{operation, "PRNI"}).
-		append(Token{register, "r2"})
-	return
-}
-
 func Linearize(tree AST) (ins []soda.Instruction, err error) {
 	defer func() {
 		if r := recover(); r != nil {
