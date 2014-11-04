@@ -1,6 +1,15 @@
 html {
+	background-image: url("/soda/images/soda_bubbles.png");
+}
+
+#foam {
 	background-image: url("/soda/images/soda_foam.png");
 	background-repeat: repeat-x;
+	height: 50px;
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 
 html, body {
@@ -9,7 +18,7 @@ html, body {
 }
 
 body {
-	background-image: url("/soda/images/soda_bubbles.png");
+
 	/* Footer fix */
 	margin:0;
 	padding:0;
