@@ -25,5 +25,144 @@
 		"byte": "0x12",
 		"syntax": "SUB ra rb rc",
 		"description": "ra = rb - rc"
-	}
+	},
+
+	{
+		"asm": "MUL",
+		"byte": "0x13",
+		"syntax": "MUL ra rb rc",
+		"description": "ra = rb * rc"
+	},
+
+	{
+		"asm": "DIV",
+		"byte": "0x14",
+		"syntax": "DIV ra rb rc",
+		"description": "ra = rb / rc"
+	},
+
+	{
+		"asm": "MOD",
+		"byte": "0x15",
+		"syntax": "MOD ra rb rc",
+		"description": "ra = rb mod rc"
+	},
+
+	{
+		"asm": "POW",
+		"byte": "0x16",
+		"syntax": "POW ra rb rc",
+		"description": "ra = rb^rc"
+	},
+
+	{
+		"asm": "ADDU",
+		"byte": "0x19",
+		"syntax": "ADDU ra rb rc",
+		"description": "ra = rb + rc"
+	},
+
+	{
+		"asm": "SUBU",
+		"byte": "0x1A",
+		"syntax": "SUBU ra rb rc",
+		"description": "ra = rb - rc"
+	},
+
+	{
+		"asm": "MULU",
+		"byte": "0x1B",
+		"syntax": "MULU ra rb rc",
+		"description": "ra = rb * rc"
+	},
+
+	{
+		"asm": "DIVU",
+		"byte": "0x1C",
+		"syntax": "DIVU ra rb rc",
+		"description": "ra = rb / rc"
+	},
+
+	{
+		"asm": "MODU",
+		"byte": "0x1D",
+		"syntax": "MODU ra rb rc",
+		"description": "ra = rb mod rc"
+	},
+
+	{
+		"asm": "POWU",
+		"byte": "0x1E",
+		"syntax": "POWU ra rb rc",
+		"description": "ra = rb<sup>rc</sup>"
+	},
+
+	{
+		"asm": "AND",
+		"byte": "0x31",
+		"syntax": "AND ra rb rc",
+		"description": "ra = rb & rc"
+	},
+
+	{
+		"asm": "OR",
+		"byte": "0x32",
+		"syntax": "OR ra rb rc",
+		"description": "ra = rb | rc"
+	},
+
+	{
+		"asm": "XOR",
+		"byte": "0x33",
+		"syntax": "OR ra rb rc",
+		"description": "ra = rb ^ rc"
+	},
+
+	{
+		"asm": "INV",
+		"byte": "0x34",
+		"syntax": "INV ra rb rc",
+		"description": "ra = rb with bits inverted"
+	},
+
+	{
+		"asm": "LSH",
+		"byte": "0x35",
+		"syntax": "INV ra rb rc",
+		"description": "ra = rb << rc"
+	},
+
+	{
+		"asm": "RSH",
+		"byte": "0x36",
+		"syntax": "INV ra rb rc",
+		"description": "ra = rb >> rc"
+	},
 ]
+
+00 - Halt execution
+01 -
+0A - Next Register set
+0B - Previous register set
+0C - Clone register (from one set to another)
+
+51 - Load
+52 - Load byte
+53 - Load Immediate
+56 - Store
+57 - Store byte
+
+61 - uncoditional jump
+62 - jump if equals
+63 - jump if not equals
+64 - jump if less than
+65 - jump if less than or equals
+
+68 - branch
+69 - branch if equals
+6A - branch if not equals
+6B - branch if less than
+6C - branch if less than or equals
+
+81 - Print register a as integer
+82 - Print register a as char
