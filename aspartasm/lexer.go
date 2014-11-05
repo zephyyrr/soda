@@ -13,8 +13,8 @@ type Token struct {
 }
 
 const (
-	unknown   = "wft?"
-	label     = "LABEL"
+	unknown   = "unknown"
+	label     = "label"
 	operation = "operation"
 	register  = "register"
 	number    = "number"
@@ -50,6 +50,7 @@ func lex(in io.Reader) <-chan Token {
 
 			if _, err := strconv.Atoi(s); err == nil {
 				tokens <- Token{number, s}
+				continue
 			}
 
 			if strings.HasPrefix(s, "\"") &&

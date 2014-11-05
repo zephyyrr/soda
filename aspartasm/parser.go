@@ -18,6 +18,7 @@ func parse(tokens <-chan Token) (tree AST, err error) {
 	done := false
 
 	for token := range tokens {
+
 		rule, done, err = rule(&tree, token)
 		if err != nil {
 			return
@@ -36,6 +37,7 @@ func parseStart(tree *AST, token Token) (parseFunc, bool, error) {
 		tree.append(token)
 		return parseOperation, false, nil
 	}
+	println("start unknown")
 	return nil, true, UnexpectedToken(token)
 }
 
@@ -49,11 +51,12 @@ func parseOperation(tree *AST, token Token) (parseFunc, bool, error) {
 	default:
 		return parseStart(tree, token)
 	}
+	println("operation unknown")
 	return nil, true, UnexpectedToken(token)
 }
 
 type UnexpectedToken Token
 
 func (ut UnexpectedToken) Error() string {
-	return fmt.Sprintf("Unexpected token %q (%s) found during parse", ut.Value, ut.Kind)
+	return fmt.Sprintf("Unexpected token %q (%s) found during parse.", ut.Value, ut.Kind)
 }
