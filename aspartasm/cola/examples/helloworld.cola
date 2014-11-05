@@ -1,4 +1,4 @@
-LDI 0 1
-LDI 1 2
-ADD 2 0 1
-PRNI 2
+LDI r0 r1
+LDI r1 r2
+ADD r2 r0 r1
+PRNI r2
