@@ -200,19 +200,6 @@ func rshift(v *vm, a, b, c byte) error {
 	return nil
 }
 
-func load(v *vm, a, b, c byte) error {
-	return undefined(v, a, b, c)
-}
-
-func loadb(v *vm, a, b, c byte) error {
-	return undefined(v, a, b, c)
-}
-
-func loadi(v *vm, a, b, c byte) error {
-	v.regs[a] = register(b)<<8 | register(c)
-	return nil
-}
-
 func jump(v *vm, a, b, c byte) error {
 	v.code.Seek(int64(v.regs[a]), 0)
 	return nil
@@ -234,6 +221,25 @@ func branchLess(v *vm, a, b, c byte) error {
 	if v.regs[b] < v.regs[c] {
 		v.code.Seek(int64(v.regs[a]), 0)
 	}
+	return nil
+}
+
+func load(v *vm, a, b, c byte) (err error) {
+	var tmp word
+	tmp, err = v.LoadWord(address(v.regs[b]), word(v.regs[c]))
+	v.regs[a] = register(tmp)
+	return
+}
+
+func loadb(v *vm, a, b, c byte) (err error) {
+	var tmp byte
+	tmp, err = v.LoadByte(address(v.regs[b]), word(v.regs[c]))
+	v.regs[a] = register(tmp)
+	return
+}
+
+func loadi(v *vm, a, b, c byte) error {
+	v.regs[a] = register(b)<<8 | register(c)
 	return nil
 }
 
