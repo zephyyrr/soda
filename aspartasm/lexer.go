@@ -22,18 +22,15 @@ const (
 )
 
 func lex(in io.Reader) <-chan Token {
-	bufd := bufio.NewReader(in)
+	scanner := bufio.NewScanner(in)
+	scanner.Split(bufio.ScanWords)
 	tokens := make(chan Token, 3)
 
 	go func() {
-		for {
-			s, err := bufd.ReadString(' ')
-			if err != nil {
-				close(tokens)
-			}
-
-			s = strings.Trim(s, " \n\t")
-
+		defer close(tokens)
+		// Set the split function for the scanning operation.
+		for scanner.Scan() {
+			s := scanner.Text()
 			//Check language features:
 
 			if strings.HasSuffix(s, ":") {
@@ -41,7 +38,7 @@ func lex(in io.Reader) <-chan Token {
 				tokens <- Token{label, s[:len(s)-2]}
 				continue
 			}
-			if _, err := MapOperation(s); err != nil {
+			if _, err := MapOperation(s); err == nil {
 				tokens <- Token{operation, s}
 				continue
 			}
@@ -51,7 +48,7 @@ func lex(in io.Reader) <-chan Token {
 				continue
 			}
 
-			if _, err := strconv.Atoi(s); err != nil {
+			if _, err := strconv.Atoi(s); err == nil {
 				tokens <- Token{number, s}
 			}
 
