@@ -11,19 +11,19 @@ func sodaIS(ins byte) Operation {
 		return halt
 	case 0x10:
 		return zero
-	// case 0x11:
-	// 	return addition
-	// case 0x12:
-	// 	return subtraction
-	// case 0x13:
-	// 	return multiplication
-	// case 0x14:
-	// 	return division
-	// case 0x15:
-	// 	return power
+	case 0x11:
+		return addition
+	case 0x12:
+		return subtraction
+	case 0x13:
+		return multiplication
+	case 0x14:
+		return division
+	case 0x15:
+		return mod
+	case 0x16:
+		return power
 
-	// case 0x18:
-	// 	return uzero
 	case 0x19:
 		return uaddition
 	case 0x1A:
@@ -33,6 +33,8 @@ func sodaIS(ins byte) Operation {
 	case 0x1C:
 		return udivision
 	case 0x1D:
+		return umod
+	case 0x1E:
 		return upower
 
 	case 0x31:
@@ -108,6 +110,36 @@ func zero(v *vm, a, b, c byte) error {
 	return nil
 }
 
+func addition(v *vm, a, b, c byte) error {
+	v.regs[a] = register(int32(v.regs[b]) + int32(v.regs[c]))
+	return nil
+}
+
+func subtraction(v *vm, a, b, c byte) error {
+	v.regs[a] = v.regs[b] - v.regs[c]
+	return nil
+}
+
+func multiplication(v *vm, a, b, c byte) error {
+	v.regs[a] = v.regs[b] * v.regs[c]
+	return nil
+}
+
+func division(v *vm, a, b, c byte) error {
+	v.regs[a] = v.regs[b] / v.regs[c]
+	return nil
+}
+
+func mod(v *vm, a, b, c byte) error {
+	v.regs[a] = v.regs[b] % v.regs[c]
+	return nil
+}
+
+func power(v *vm, a, b, c byte) error {
+	v.regs[a] = register(math.Pow(float64(v.regs[b]), float64(v.regs[c])))
+	return nil
+}
+
 func uaddition(v *vm, a, b, c byte) error {
 	v.regs[a] = v.regs[b] + v.regs[c]
 	return nil
@@ -125,6 +157,11 @@ func umultiplication(v *vm, a, b, c byte) error {
 
 func udivision(v *vm, a, b, c byte) error {
 	v.regs[a] = v.regs[b] / v.regs[c]
+	return nil
+}
+
+func umod(v *vm, a, b, c byte) error {
+	v.regs[a] = v.regs[b] % v.regs[c]
 	return nil
 }
 
