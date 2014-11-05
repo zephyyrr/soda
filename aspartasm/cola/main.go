@@ -27,6 +27,10 @@ func main() {
 		log.Fatalf("Error opening input file %s for reading: %s", flag.Arg(0), err)
 	}
 
+	if *parse && *output == "a.sc" {
+		*output = "a.ast"
+	}
+
 	out, err := os.OpenFile(*output, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0660)
 	if err != nil {
 		log.Fatalf("Error opening output file %s for writing: %s", *output, err)
