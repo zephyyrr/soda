@@ -34,13 +34,15 @@ type vm struct {
 	is      InstructionSet
 	code    tape
 	halting bool
+	MainMemory
 }
 
 func New(code tape) *vm {
 	v := &vm{
-		code:    code,
-		is:      sodaIS,
-		halting: false,
+		code:       code,
+		is:         sodaIS,
+		halting:    false,
+		MainMemory: make(MainMemory),
 	}
 	v.regs = &v.regsets[v.currset]
 	return v

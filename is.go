@@ -50,6 +50,8 @@ func sodaIS(ins byte) Operation {
 	case 0x36:
 		return rshift
 
+	case 0x50:
+		return malloc
 	case 0x51:
 		return load
 	case 0x52:
@@ -60,6 +62,8 @@ func sodaIS(ins byte) Operation {
 		return store
 	case 0x57:
 		return storeb
+	case 0x5F:
+		return free
 
 	case 0x61:
 		return jump
@@ -176,7 +180,7 @@ func and(v *vm, a, b, c byte) error {
 }
 
 func or(v *vm, a, b, c byte) error {
-	v.regs[a] = v.regs[b] & v.regs[c]
+	v.regs[a] = v.regs[b] | v.regs[c]
 	return nil
 }
 
@@ -197,19 +201,6 @@ func lshift(v *vm, a, b, c byte) error {
 
 func rshift(v *vm, a, b, c byte) error {
 	v.regs[a] = v.regs[b] >> v.regs[c]
-	return nil
-}
-
-func load(v *vm, a, b, c byte) error {
-	return undefined(v, a, b, c)
-}
-
-func loadb(v *vm, a, b, c byte) error {
-	return undefined(v, a, b, c)
-}
-
-func loadi(v *vm, a, b, c byte) error {
-	v.regs[a] = register(b)<<8 | register(c)
 	return nil
 }
 
@@ -237,12 +228,41 @@ func branchLess(v *vm, a, b, c byte) error {
 	return nil
 }
 
+func malloc(v *vm, a, b, c byte) error {
+	addr, err := v.Allocate(word(v.regs[b]))
+	v.regs[a] = register(addr)
+	return err
+}
+
+func free(v *vm, a, b, c byte) error {
+	return nil
+}
+
+func load(v *vm, a, b, c byte) (err error) {
+	var tmp word
+	tmp, err = v.LoadWord(address(v.regs[b]), word(v.regs[c]))
+	v.regs[a] = register(tmp)
+	return
+}
+
+func loadb(v *vm, a, b, c byte) (err error) {
+	var tmp byte
+	tmp, err = v.LoadByte(address(v.regs[b]), word(v.regs[c]))
+	v.regs[a] = register(tmp)
+	return
+}
+
+func loadi(v *vm, a, b, c byte) error {
+	v.regs[a] = register(b)<<8 | register(c)
+	return nil
+}
+
 func store(v *vm, a, b, c byte) error {
-	return undefined(v, a, b, c)
+	return v.StoreWord(address(v.regs[b]), word(v.regs[c]), word(v.regs[a]))
 }
 
 func storeb(v *vm, a, b, c byte) error {
-	return undefined(v, a, b, c)
+	return v.StoreByte(address(v.regs[b]), word(v.regs[c]), byte(v.regs[a]))
 }
 
 func printi(v *vm, a, b, c byte) error {
