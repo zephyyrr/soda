@@ -25,6 +25,22 @@ func (m MainMemory) LoadByte(addr address, offset word) (byte, error) {
 	return m[addr][offset], nil
 }
 
+func (m MainMemory) StoreWord(addr address, offset word, value word) error {
+	if uint32(len(m[addr])) <= uint32(offset+4) {
+		return IllegalMemoryAccess(addr + address(offset))
+	}
+	binary.PutUvarint(m[addr][offset:offset+4], uint64(value))
+	return nil
+}
+
+func (m MainMemory) StoreByte(addr address, offset word, value byte) error {
+	if uint32(len(m[addr])) <= uint32(offset) {
+		return IllegalMemoryAccess(addr + address(offset))
+	}
+	m[addr][offset] = value
+	return nil
+}
+
 type IllegalMemoryAccess address
 
 func (ima IllegalMemoryAccess) Error() string {
