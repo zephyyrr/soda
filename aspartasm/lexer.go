@@ -2,6 +2,7 @@ package aspartasm
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"strconv"
 	"strings"
@@ -53,9 +54,23 @@ func lex(in io.Reader) <-chan Token {
 				continue
 			}
 
-			if strings.HasPrefix(s, "\"") &&
-				strings.HasSuffix(s, "\"") {
-				tokens <- Token{sträng, s[1 : len(s)-2]}
+			if strings.HasPrefix(s, "'") &&
+				strings.HasSuffix(s, "'") && len(s) > 2 {
+				val, _, _, _ := strconv.UnquoteChar(s[1:len(s)-1], '"')
+				//Multibyte is dropped because we will drop extra bytes anyway shortly.
+				//The tail is dropped because it should not be there
+				//the error is dropped because then we just give a zero literal.
+				//println("Char literal", s, "=", int(val), "detected:", err.Error())
+				//println("Multi-byte:", multi, "; Tail:", tail)
+				tokens <- Token{number, strconv.Itoa(int(val))}
+				continue
+			}
+
+			if strings.HasPrefix(s, "'") &&
+				strings.HasSuffix(s, "'") {
+				var str string
+				fmt.Sscanf(s, "%q", &str)
+				tokens <- Token{sträng, str}
 				continue
 			}
 
