@@ -11,7 +11,8 @@ import (
 )
 
 var (
-	ErrNoMagicBytes = errors.New("No magic bytes")
+	ErrNoMagicBytes     = errors.New("No magic bytes")
+	ErrInvalidOperation = errors.New("Invalid operation")
 )
 
 // A Soda operation argument
@@ -84,9 +85,7 @@ func ReadInstructions(raw io.Reader) ([]Inst, error) {
 			return nil, err
 		}
 
-		rdr := getArgumentReader(opCode)
-
-		args, err := rdr(in)
+		args, err := readArgs(opCode, in)
 
 		if err != nil {
 			return nil, err
@@ -94,4 +93,14 @@ func ReadInstructions(raw io.Reader) ([]Inst, error) {
 
 		instrs = append(instrs, Inst{Op(opCode), args})
 	}
+}
+
+func readArgs(op byte, in *bufio.Reader) ([]Arg, error) {
+	reader, err := Op(op).ArgReader()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return reader(in)
 }
