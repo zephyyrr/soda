@@ -69,14 +69,16 @@ func ReadInstructions(raw io.Reader) ([]Inst, error) {
 		return nil, ErrNoMagicBytes
 	}
 
-	instrs := make([]Inst)
+	instrs := make([]Inst, 0)
 
 	// Loop while not EOF
 	for {
 		opCode, err := in.ReadByte()
 
-		switch err != nil; err {
-		case EOF:
+		switch err {
+		case nil:
+			break
+		case io.EOF:
 			return instrs, nil
 		default:
 			return nil, err
