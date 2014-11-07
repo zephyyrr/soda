@@ -78,6 +78,10 @@ func sodaIS(ins byte) Operation {
 		return printi
 	case 0x82:
 		return printc
+	case 0x89:
+		return printii
+	case 0x8a:
+		return printci
 	}
 
 	return undefined
@@ -272,5 +276,15 @@ func printi(v *vm, a, b, c byte) error {
 
 func printc(v *vm, a, b, c byte) error {
 	fmt.Printf("%c", v.regs[a])
+	return nil
+}
+
+func printii(v *vm, a, b, c byte) error {
+	fmt.Printf("%d", word(b)<<8|word(c))
+	return nil
+}
+
+func printci(v *vm, a, b, c byte) error {
+	fmt.Printf("%c", word(b)<<8|word(c))
 	return nil
 }

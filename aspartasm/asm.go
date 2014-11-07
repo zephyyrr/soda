@@ -45,8 +45,10 @@ var ops = map[string]byte{
 	"BRAL":  0x6B,
 	"BRALE": 0x6C,
 
-	"PRNI": 0x81,
-	"PRNC": 0x82,
+	"PRNI":  0x81,
+	"PRNC":  0x82,
+	"PRNII": 0x89,
+	"PRNCI": 0x8a,
 }
 
 func MapOperation(op string) (byte, error) {
