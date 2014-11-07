@@ -219,14 +219,14 @@ func (op Op) String() string {
 	return fmt.Sprintf("Op(%x)", byte(op))
 }
 
-func (op Op) ArgReader() (argReader, error) {
+func (op Op) ReadArgs(in *bufio.Reader) ([]Arg, error) {
 	reader, ok := opToArgReader[op]
 
 	if !ok {
 		return nil, ErrInvalidOperation
 	}
 
-	return reader, nil
+	return reader(in)
 }
 
 type argReader func(*bufio.Reader) ([]Arg, error)
