@@ -182,6 +182,20 @@
 		"implemented": true,
 		"description": "ra = rb >> rc"
 	},
+	
+	{
+		"asm": "MALC",
+		"byte": "0x50",
+		"syntax": "MALC ra rb",
+		"description": "Set ra to address of newly allocated memory containing rb bytes"
+	},
+	
+	{
+		"asm": "FREE",
+		"byte": "0x5F",
+		"syntax": "MALC ra",
+		"description": "Frees the memory pointed at by ra previously allocated by MALC"
+	},
 
 	{
 		"asm": "LDW",
