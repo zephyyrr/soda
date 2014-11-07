@@ -27,8 +27,8 @@ func (m MainMemory) LoadWord(addr address, offset word) (word, error) {
 		return 0, IllegalMemoryAccess(addr + address(offset))
 	}
 	chunk := m[addr]
-	val := word(chunk[offset]) | word(chunk[offset+1]<<8)
-	val |= word(chunk[offset+2]<<16) | word(chunk[offset+3]<<24)
+	val := word(chunk[offset]) | word(chunk[offset+1])<<8
+	val |= word(chunk[offset+2])<<16 | word(chunk[offset+3])<<24
 	return word(val), nil
 }
 
