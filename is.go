@@ -37,6 +37,32 @@ func sodaIS(ins byte) Operation {
 	case 0x1E:
 		return upower
 
+	case 0x21:
+		return additionI
+	case 0x22:
+		return subtractionI
+	case 0x23:
+		return multiplicationI
+	case 0x24:
+		return divisionI
+	case 0x25:
+		return modI
+	case 0x26:
+		return powerI
+
+	case 0x29:
+		return uadditionI
+	case 0x2A:
+		return usubtractionI
+	case 0x2B:
+		return umultiplicationI
+	case 0x2C:
+		return udivisionI
+	case 0x2D:
+		return umodI
+	case 0x2E:
+		return upowerI
+
 	case 0x31:
 		return and
 	case 0x32:
