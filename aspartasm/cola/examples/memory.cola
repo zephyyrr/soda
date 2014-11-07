@@ -1,5 +1,3 @@
-ldi r32 32
-
 ldi r0 3000
 ldi r1 4000
 
@@ -8,7 +6,7 @@ lsh r1 r1 r2
 or r0 r0 r1
 
 prni r0
-prnc r32
+prnci 32
 
 malc r5 r2
 ldi r6 0
@@ -18,27 +16,24 @@ ldw r42 r5 r6
 prni r42
 free r5
 
-ldi r10 10
-prnc r10
-
-ldi r4 1
+prnci 10
 
 ldb r43 r5 r6
 prni r43
-prnc r32
-addu r6 r6 r4
+prnci 32
+addui r6 1
 
 ldb r43 r5 r6
 prni r43
-prnc r32
-addu r6 r6 r4
+prnci 32
+addui r6 1
 
 ldb r43 r5 r6
 prni r43
-prnc r32
-addu r6 r6 r4
+prnci 32
+addui r6 1
 
 ldb r43 r5 r6
 prni r43
-prnc r32
-addu r6 r6 r4
+prnc 32
+addui r6 1
