@@ -85,7 +85,7 @@ func ReadInstructions(raw io.Reader) ([]Inst, error) {
 			return nil, err
 		}
 
-		args, err := readArgs(opCode, in)
+		args, err := Op(opCode).ReadArgs(in)
 
 		if err != nil {
 			return nil, err
@@ -93,14 +93,4 @@ func ReadInstructions(raw io.Reader) ([]Inst, error) {
 
 		instrs = append(instrs, Inst{Op(opCode), args})
 	}
-}
-
-func readArgs(op byte, in *bufio.Reader) ([]Arg, error) {
-	reader, err := Op(op).ArgReader()
-
-	if err != nil {
-		return nil, err
-	}
-
-	return reader(in)
 }
