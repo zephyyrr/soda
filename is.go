@@ -178,6 +178,74 @@ func upower(v *vm, a, b, c byte) error {
 	return nil
 }
 
+/*
+	Immediate artithmetic operations
+*/
+
+func additionI(v *vm, a, b, c byte) error {
+	v.regs[a] += register(b)<<16 | register(c)
+	return nil
+}
+
+func subtractionI(v *vm, a, b, c byte) error {
+	v.regs[a] -= register(b)<<16 | register(c)
+	return nil
+}
+
+func multiplicationI(v *vm, a, b, c byte) error {
+	v.regs[a] *= register(b)<<16 | register(c)
+	return nil
+}
+
+func divisionI(v *vm, a, b, c byte) error {
+	v.regs[a] /= register(b)<<16 | register(c)
+	return nil
+}
+
+func modI(v *vm, a, b, c byte) error {
+	v.regs[a] %= register(b)<<16 | register(c)
+	return nil
+}
+
+func powerI(v *vm, a, b, c byte) error {
+	v.regs[a] = register(math.Pow(float64(v.regs[a]), float64(register(b)<<16|register(c))))
+	return nil
+}
+
+func uadditionI(v *vm, a, b, c byte) error {
+	v.regs[a] += register(b)<<16 | register(c)
+	return nil
+}
+
+func usubtractionI(v *vm, a, b, c byte) error {
+	v.regs[a] -= register(b)<<16 | register(c)
+	return nil
+}
+
+func umultiplicationI(v *vm, a, b, c byte) error {
+	v.regs[a] *= register(b)<<16 | register(c)
+	return nil
+}
+
+func udivisionI(v *vm, a, b, c byte) error {
+	v.regs[a] /= register(b)<<16 | register(c)
+	return nil
+}
+
+func umodI(v *vm, a, b, c byte) error {
+	v.regs[a] %= register(b)<<16 | register(c)
+	return nil
+}
+
+func upowerI(v *vm, a, b, c byte) error {
+	v.regs[a] = register(math.Pow(float64(v.regs[a]), float64(register(b)<<16|register(c))))
+	return nil
+}
+
+/*
+	Logical operations
+*/
+
 func and(v *vm, a, b, c byte) error {
 	v.regs[a] = v.regs[b] & v.regs[c]
 	return nil
