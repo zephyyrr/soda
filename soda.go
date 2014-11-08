@@ -37,15 +37,17 @@ type vm struct {
 	options  Options
 	messages chan string
 	halting  bool
+	MainMemory
 }
 
 func New(code tape, options Options) *vm {
 	v := &vm{
-		code:     code,
-		is:       sodaIS,
-		halting:  false,
-		options:  options,
-		messages: make(chan string, 1),
+		code:       code,
+		is:         sodaIS,
+		halting:    false,
+		options:    options,
+		messages:   make(chan string, 1),
+		MainMemory: make(MainMemory),
 	}
 	v.regs = &v.regsets[v.currset]
 	return v

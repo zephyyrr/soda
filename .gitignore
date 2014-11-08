@@ -1,0 +1,8 @@
+*.sc
+*.ast
+*.out
+*.exe
+*.pkg
+*.a
+*~
+*.bak
