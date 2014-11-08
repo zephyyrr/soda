@@ -2,6 +2,7 @@ package soda
 
 import (
 	"encoding/binary"
+	"fmt"
 	"io"
 )
 
@@ -28,20 +29,24 @@ type tape interface {
 type registerSet [256]register
 
 type vm struct {
-	regsets [256]registerSet
-	currset byte
-	regs    *registerSet
-	is      InstructionSet
-	code    tape
-	halting bool
+	regsets  [256]registerSet
+	currset  byte
+	regs     *registerSet
+	is       InstructionSet
+	code     tape
+	options  Options
+	messages chan string
+	halting  bool
 	MainMemory
 }
 
-func New(code tape) *vm {
+func New(code tape, options Options) *vm {
 	v := &vm{
 		code:       code,
 		is:         sodaIS,
 		halting:    false,
+		options:    options,
+		messages:   make(chan string, 1),
 		MainMemory: make(MainMemory),
 	}
 	v.regs = &v.regsets[v.currset]
@@ -59,8 +64,15 @@ func (v *vm) Execute() error {
 		if err != nil {
 			return err
 		}
-		// log.Printf("%x", ins)
+		if v.options.Verbose {
+			v.sendMessagef("%x", ins)
+		}
 		operation := v.is(ins.Operation)
+
+		if v.options.Debug {
+			var char rune
+			fmt.Scan(char)
+		}
 
 		if err := operation(v, ins.A, ins.B, ins.C); err != nil {
 			return err
@@ -68,6 +80,26 @@ func (v *vm) Execute() error {
 	}
 
 	return nil
+}
+
+func (v *vm) Messages() <-chan string {
+	return v.messages
+}
+
+func (v *vm) sendMessage(vals ...interface{}) {
+	select {
+	case v.messages <- fmt.Sprint(vals...):
+	default:
+	}
+
+}
+
+func (v *vm) sendMessageln(vals ...interface{}) {
+	v.sendMessage(fmt.Sprintln(vals...))
+}
+
+func (v *vm) sendMessagef(format string, vals ...interface{}) {
+	v.sendMessage(fmt.Sprintf(format, vals...))
 }
 
 const MagicBytes word = 0x534F4441 // "SODA"

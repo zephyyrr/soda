@@ -8,7 +8,8 @@ import (
 )
 
 var (
-	debug = flag.Bool("d", false, "Set to true for debug mode.")
+	verbose = flag.Bool("v", false, "Force verbose printing")
+	debug   = flag.Bool("d", false, "Debug mode.")
 )
 
 func main() {
@@ -25,6 +26,20 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 	}
 
-	vm := soda.New(file)
+	options := Options()
+
+	vm := soda.New(file, options)
+	go func() {
+		for message := range vm.Messages() {
+			fmt.Fprintln(os.Stderr, message)
+		}
+	}()
 	vm.Execute()
+}
+
+func Options() soda.Options {
+	return soda.Options{
+		Verbose: *verbose,
+		Debug:   *debug,
+	}
 }
