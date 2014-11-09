@@ -146,6 +146,19 @@ const (
 	_
 	PRNI
 	PRNC
+	_
+	_
+	_
+	_
+	_
+	_
+	PRNII
+	PRNCI
+	_
+	_
+	_
+	_
+	_
 )
 
 var opToArgReader = map[Op]argReader{
@@ -198,6 +211,9 @@ var opToArgReader = map[Op]argReader{
 
 	PRNI: oneReg,
 	PRNC: oneReg,
+
+	PRNII: oneImm,
+	PRNCI: oneImm,
 }
 
 var opToString = make(map[Op]string)
@@ -306,10 +322,25 @@ func oneRegImm(in *bufio.Reader) ([]Arg, error) {
 		return nil, err
 	}
 
-	var imm uint32
+	var imm uint16
 	if err := binary.Read(in, binary.BigEndian, &imm); err != nil {
 		return nil, err
 	}
 
 	return []Arg{Reg(r1), Imm(imm)}, nil
+}
+
+func oneImm(in *bufio.Reader) ([]Arg, error) {
+	_, err := in.ReadByte()
+
+	if err != nil {
+		return nil, err
+	}
+
+	var imm uint16
+	if err := binary.Read(in, binary.BigEndian, &imm); err != nil {
+		return nil, err
+	}
+
+	return []Arg{Imm(imm)}, nil
 }
