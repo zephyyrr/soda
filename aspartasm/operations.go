@@ -42,20 +42,20 @@ const (
 	_
 
 	_
+	ADDI
+	SUBI
+	MULI
+	DIVI
+	MODI
+	POWI
 	_
 	_
-	_
-	_
-	_
-	_
-	_
-	_
-	_
-	_
-	_
-	_
-	_
-	_
+	ADDUI
+	SUBUI
+	MULUI
+	DIVUI
+	MODUI
+	POWUI
 	_
 
 	_
@@ -182,6 +182,20 @@ var opToArgReader = map[Op]argReader{
 	DIVU: threeRegs,
 	MODU: threeRegs,
 	POWU: threeRegs,
+
+	ADDI: oneRegImm,
+	SUBI: oneRegImm,
+	MULI: oneRegImm,
+	DIVI: oneRegImm,
+	MODI: oneRegImm,
+	POWI: oneRegImm,
+
+	ADDUI: oneRegImm,
+	SUBUI: oneRegImm,
+	MULUI: oneRegImm,
+	DIVUI: oneRegImm,
+	MODUI: oneRegImm,
+	POWUI: oneRegImm,
 
 	AND: threeRegs,
 	OR:  threeRegs,
