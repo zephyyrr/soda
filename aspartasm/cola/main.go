@@ -1,19 +1,19 @@
 package main
 
 import (
-	"bufio"
 	"encoding/json"
 	"flag"
+	"fmt"
 	"github.com/zephyyrr/soda/aspartasm"
 	"log"
 	"os"
 )
 
 var (
-	verbose   = flag.Bool("v", false, "Verbose output")
-	output    = flag.String("o", "a.sc", "Sets output name of assembled binary")
-	linearize = flag.Bool("l", false, "Only linearize (input is pre-parsed AST)")
-	parse     = flag.Bool("p", false, "Stop after parsing. Output is AST.")
+	verbose     = flag.Bool("v", false, "Verbose output")
+	output      = flag.String("o", "a.sc", "Sets output name of assembled binary")
+	linearize   = flag.Bool("l", false, "Only linearize (input is pre-parsed AST)")
+	parse       = flag.Bool("p", false, "Stop after parsing. Output is AST.")
 	disassemble = flag.Bool("d", false, "Disassemble the given .sc file.")
 )
 
@@ -65,14 +65,9 @@ func main() {
 			log.Fatalf("Error disassembling %s: %s", flag.Arg(0), err)
 		}
 
-		w := bufio.NewWriter(out)
-
 		for _, i := range ins {
-			w.WriteString(i.String())
-			w.WriteString("\n")
+			fmt.Fprintln(out, i)
 		}
-
-		w.Flush()
 
 	} else if *parse {
 		if *verbose {
