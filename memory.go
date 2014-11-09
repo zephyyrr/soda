@@ -23,7 +23,7 @@ func (m MainMemory) Free(addr address) error {
 }
 
 func (m MainMemory) LoadWord(addr address, offset word) (word, error) {
-	if uint32(len(m[addr])) <= uint32(offset+4) {
+	if uint32(len(m[addr])) < uint32(offset+4) {
 		return 0, IllegalMemoryAccess(addr + address(offset))
 	}
 	chunk := m[addr]

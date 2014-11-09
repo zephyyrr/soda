@@ -52,3 +52,19 @@ func TestMainMemory_Free(t *testing.T) {
 
 	}
 }
+
+func TestMainMemory_LoadWord(t *testing.T) {
+	mm := make(MainMemory)
+	mm[0] = MemoryBlock{1, 2, 3, 4, 5, 6}
+	expected := []word{0x04030201, 0x05040302, 0x06050403}
+	for i := 0; i < len(mm[0])-4; i++ {
+		t.Log(i)
+		w, err := mm.LoadWord(0, word(i))
+		if err != nil {
+			t.Error(err)
+		}
+		if w != expected[i] {
+			t.Fail()
+		}
+	}
+}
