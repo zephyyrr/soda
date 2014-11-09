@@ -56,7 +56,7 @@ func main() {
 
 	if *disassemble {
 		if *verbose {
-			log.Println("Mode:", "Disassemble-only")
+			log.Println("Mode:", "Disassemble")
 		}
 
 		ins, err := aspartasm.ReadInstructions(in)
