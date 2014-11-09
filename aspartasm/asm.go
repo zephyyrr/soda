@@ -6,6 +6,11 @@ import (
 )
 
 var ops = map[string]byte{
+	"HALT": 0x00,
+	"NRS":  0x0A,
+	"PRS":  0x0B,
+	"MOVS": 0x0C,
+
 	"ZERO": 0x10,
 	"ADD":  0x11,
 	"SUB":  0x12,

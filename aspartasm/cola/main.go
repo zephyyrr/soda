@@ -3,16 +3,18 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
 	"github.com/zephyyrr/soda/aspartasm"
 	"log"
 	"os"
 )
 
 var (
-	verbose   = flag.Bool("v", false, "Verbose output")
-	output    = flag.String("o", "a.sc", "Sets output name of assembled binary")
-	linearize = flag.Bool("l", false, "Only linearize (input is pre-parsed AST)")
-	parse     = flag.Bool("p", false, "Stop after parsing. Output is AST.")
+	verbose     = flag.Bool("v", false, "Verbose output")
+	output      = flag.String("o", "a.sc", "Sets output name of assembled binary")
+	linearize   = flag.Bool("l", false, "Only linearize (input is pre-parsed AST)")
+	parse       = flag.Bool("p", false, "Stop after parsing. Output is AST.")
+	disassemble = flag.Bool("d", false, "Disassemble the given .sc file.")
 )
 
 func main() {
@@ -26,6 +28,16 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error opening input file %s for reading: %s", flag.Arg(0), err)
 	}
+	defer in.Close()
+
+	if *disassemble {
+		*parse = false
+		*linearize = false
+	}
+
+	if *disassemble && *output == "a.sc" {
+		*output = "a.cola"
+	}
 
 	if *parse && *output == "a.sc" {
 		*output = "a.ast"
@@ -35,13 +47,29 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error opening output file %s for writing: %s", *output, err)
 	}
+	defer out.Close()
 
 	if *verbose {
 		log.Println("Input:", flag.Arg(0))
 		log.Println("Output:", *output)
 	}
 
-	if *parse {
+	if *disassemble {
+		if *verbose {
+			log.Println("Mode:", "Disassemble-only")
+		}
+
+		ins, err := aspartasm.ReadInstructions(in)
+
+		if err != nil {
+			log.Fatalf("Error disassembling %s: %s", flag.Arg(0), err)
+		}
+
+		for _, i := range ins {
+			fmt.Fprintln(out, i)
+		}
+
+	} else if *parse {
 		if *verbose {
 			log.Println("Mode:", "Parse-only")
 		}
