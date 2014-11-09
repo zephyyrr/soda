@@ -1,8 +1,8 @@
 package aspartasm
 
 import (
-	"io"
 	"bytes"
+	"io"
 	"testing"
 )
 
@@ -29,17 +29,17 @@ func TestInstString(t *testing.T) {
 
 type readTestStruct struct {
 	name string
-	bin []byte
-	err error
-	ins []string
+	bin  []byte
+	err  error
+	ins  []string
 }
 
-var binaryTable = []readTestStruct {
+var binaryTable = []readTestStruct{
 	{
 		name: "Empty slice",
-		bin: []byte{},
-		err: io.EOF,
-		ins: []string{},
+		bin:  []byte{},
+		err:  io.EOF,
+		ins:  []string{},
 	},
 	{
 		name: "Just magic bytes",
@@ -71,6 +71,27 @@ var binaryTable = []readTestStruct {
 			"PRNCI 10",
 		},
 	},
+	{
+		name: "it = 13 + 37, it << 3, print it",
+		bin: []byte{
+			0x53, 0x4F, 0x44, 0x41,
+			byte(LDI), 1, 0, 13,
+			byte(LDI), 2, 0, 37,
+			byte(ADD), 1, 1, 2,
+			byte(LDI), 2, 0, 3,
+			byte(LSH), 1, 1, 2,
+			byte(PRNI), 1, 0, 0,
+		},
+		err: nil,
+		ins: []string{
+			"LDI r1 13",
+			"LDI r2 37",
+			"ADD r1 r1 r2",
+			"LDI r2 3",
+			"LSH r1 r1 r2",
+			"PRNI r1",
+		},
+	},
 }
 
 func TestReadInstructions(t *testing.T) {
@@ -81,19 +102,19 @@ func TestReadInstructions(t *testing.T) {
 
 		switch {
 		case err != nil:
-			if (s.err == nil) {
-				t.Errorf(f + "didn't expect error, got %s", s.name, err)
-			} else if (s.err != err) {
-				t.Errorf(f + "%s != %s", s.name, err, s.err)
+			if s.err == nil {
+				t.Errorf(f+"didn't expect error, got %s", s.name, err)
+			} else if s.err != err {
+				t.Errorf(f+"%s != %s", s.name, err, s.err)
 			}
 
 		case len(ins) != len(s.ins):
-			t.Error(f + "read %d instructions expected %d", s.name, len(ins), len(s.ins))
+			t.Error(f+"read %d instructions expected %d", s.name, len(ins), len(s.ins))
 
 		default:
 			for i, in := range ins {
 				if in.String() != s.ins[i] {
-					t.Errorf(f + "ins[%d] was read as %s, expected %s", s.name, i, in.String(), s.ins[i])
+					t.Errorf(f+"ins[%d] was read as %s, expected %s", s.name, i, in.String(), s.ins[i])
 				}
 			}
 		}
