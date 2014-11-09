@@ -7,21 +7,21 @@ import (
 
 func TestLinearize(t *testing.T) {
 	tree := newAst()
-	tree.append(token{operation, "LDI"}).appendAll(
-		token{register, "r0"},
-		token{number, "257"})
+	tree.append(Token{operation, "LDI"}).appendAll(
+		Token{register, "r0"},
+		Token{number, "257"})
 
-	tree.append(token{operation, "LDI"}).
-		appendAll(token{register, "r1"},
-		token{number, "1"})
+	tree.append(Token{operation, "LDI"}).
+		appendAll(Token{register, "r1"},
+		Token{number, "1"})
 
-	tree.append(token{operation, "ADD"}).
-		appendAll(token{register, "r2"},
-		token{register, "r0"},
-		token{register, "r1"})
+	tree.append(Token{operation, "ADD"}).
+		appendAll(Token{register, "r2"},
+		Token{register, "r0"},
+		Token{register, "r1"})
 
-	tree.append(token{operation, "PRNI"}).
-		append(token{register, "r2"})
+	tree.append(Token{operation, "PRNI"}).
+		append(Token{register, "r2"})
 
 	ins, err := Linearize(*tree)
 	if err != nil {
