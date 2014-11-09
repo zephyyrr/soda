@@ -336,7 +336,7 @@ func oneRegImm(in *bufio.Reader) ([]Arg, error) {
 		return nil, err
 	}
 
-	var imm uint16
+	var imm Imm
 	if err := binary.Read(in, binary.BigEndian, &imm); err != nil {
 		return nil, err
 	}
@@ -351,7 +351,7 @@ func oneImm(in *bufio.Reader) ([]Arg, error) {
 		return nil, err
 	}
 
-	var imm uint16
+	var imm Imm
 	if err := binary.Read(in, binary.BigEndian, &imm); err != nil {
 		return nil, err
 	}

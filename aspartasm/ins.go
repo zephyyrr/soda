@@ -48,7 +48,7 @@ func (r Reg) String() string {
 }
 
 // An immediate value
-type Imm uint32
+type Imm int16
 
 func (i Imm) String() string {
 	return fmt.Sprintf("%d", i)
@@ -59,7 +59,7 @@ func (i Imm) String() string {
 func ReadInstructions(raw io.Reader) ([]Inst, error) {
 	in := bufio.NewReader(raw)
 
-	var magic uint32
+	var magic uint32 //soda.word
 
 	if err := binary.Read(in, binary.BigEndian, &magic); err != nil {
 		return nil, err
