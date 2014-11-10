@@ -2,6 +2,7 @@ package aspartasm
 
 import (
 	"io"
+	"strconv"
 	"text/scanner"
 )
 
@@ -68,6 +69,8 @@ func lexStart(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, []r
 func lexLineComment(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, []rune) {
 	t := s.Scan()
 	switch t {
+	case scanner.EOF:
+		return nil, nil
 	case '\n':
 		//End of comment
 		//^ Was that meta or what?
@@ -124,7 +127,7 @@ func lexParam(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, []r
 		return lexCharLit, nil
 
 	case '0':
-		return lexRadix, nil
+		return lexRadix, append(part, t)
 	case '1':
 		fallthrough
 	case '2':
@@ -153,15 +156,108 @@ func lexRegister(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, 
 	t := s.Scan()
 	switch t {
 	case scanner.EOF:
-		tokens <- Token{operation, string(part)}
-		return nil, nil
+		panic(t)
 	case ' ':
 		fallthrough
 	case '\t':
 		tokens <- Token{register, string(part)}
 		return lexParam, nil
 	default:
-		tokens <- Token{unknown, string(append(part, t))}
 		return lexRegister, append(part, t)
 	}
+}
+
+func lexCharLit(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, []rune) {
+	t := s.Scan()
+	switch t {
+	case scanner.EOF:
+		panic(t)
+	case '\'':
+		char, _, _, err := strconv.UnquoteChar(string(part), '\'')
+		if err != nil {
+			tokens <- Token{unknown, string(append(part, t))}
+		}
+		tokens <- Token{register, strconv.Itoa(int(char))}
+		return lexParam, nil
+	default:
+		tokens <- Token{unknown, string(append(part, t))}
+		return lexCharLit, append(part, t)
+	}
+}
+
+func lexNumberLit(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, []rune) {
+	t := s.Scan()
+	switch t {
+	case scanner.EOF:
+		panic(t)
+	case ' ':
+		fallthrough
+	case '\t':
+		tokens <- Token{number, string(part)}
+		return lexParam, nil
+
+	case '0':
+		return lexRadix, append(part, t)
+	case '1':
+		fallthrough
+	case '2':
+		fallthrough
+	case '3':
+		fallthrough
+	case '4':
+		fallthrough
+	case '5':
+		fallthrough
+	case '6':
+		fallthrough
+	case '7':
+		fallthrough
+	case '8':
+		fallthrough
+	case '9':
+		fallthrough
+	case 'A':
+		fallthrough
+	case 'a':
+		fallthrough
+	case 'B':
+		fallthrough
+	case 'b':
+		fallthrough
+	case 'C':
+		fallthrough
+	case 'c':
+		fallthrough
+	case 'D':
+		fallthrough
+	case 'd':
+		fallthrough
+	case 'E':
+		fallthrough
+	case 'e':
+		fallthrough
+	case 'F':
+		fallthrough
+	case 'f':
+		return lexNumberLit, append(part, t)
+	default:
+		tokens <- Token{unknown, string(append(part, t))}
+		return lexParam, nil
+	}
+}
+
+func lexRadix(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, []rune) {
+	t := s.Scan()
+	switch t {
+	case scanner.EOF:
+		panic(t)
+	case 'x':
+	case 'o':
+	case 'b':
+		return lexNumberLit, append(part, t)
+	default:
+		tokens <- Token{unknown, string(append(part, t))}
+		return lexNumberLit, nil
+	}
+	return lexNumberLit, nil
 }
