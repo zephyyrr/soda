@@ -62,6 +62,7 @@ func ReadInstructions(raw io.Reader) ([]Inst, error) {
 	var magic uint32 //soda.word
 
 	if err := binary.Read(in, binary.BigEndian, &magic); err != nil {
+		println("Magic")
 		return nil, err
 	}
 
@@ -88,6 +89,7 @@ func ReadInstructions(raw io.Reader) ([]Inst, error) {
 		args, err := Op(opCode).ReadArgs(in)
 
 		if err != nil {
+			println("args")
 			return nil, err
 		}
 
