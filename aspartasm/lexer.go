@@ -1,9 +1,10 @@
 package aspartasm
 
 import (
+	"bufio"
 	"io"
+	"log"
 	"strconv"
-	"text/scanner"
 )
 
 type Token struct {
@@ -20,12 +21,11 @@ const (
 	sträng    = "string"
 )
 
-type lexfunc func(chan<- Token, scanner.Scanner, []rune) (lexfunc, []rune)
+type lexfunc func(chan<- Token, rune, []rune) (lexfunc, []rune)
 
 func lex(in io.Reader) <-chan Token {
-	var s scanner.Scanner
-	s.Init(in)
 	tokens := make(chan Token, 3)
+	bufin := bufio.NewReader(in)
 
 	go func() {
 		defer close(tokens)
@@ -37,20 +37,22 @@ func lex(in io.Reader) <-chan Token {
 
 		// Set the split function for the scanning operation.
 		f := lexfunc(lexStart)
-		for f != nil {
-
+		var part []rune
+		t, _, err := bufin.ReadRune()
+		for !(f == nil || err != nil) {
+			f, part = f(tokens, t, part)
+			t, _, err = bufin.ReadRune()
 		}
+
+		log.Println(err)
 
 	}()
 
 	return tokens
 }
 
-func lexStart(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, []rune) {
-	t := s.Scan()
+func lexStart(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 	switch t {
-	case scanner.EOF:
-		return nil, nil
 	case ' ':
 		fallthrough
 	case '\n':
@@ -62,15 +64,14 @@ func lexStart(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, []r
 	case '#':
 		return lexLineComment, nil
 	default:
-		return lexOp, append(part, t)
+		return lexOp, []rune{rune(byte(t))}
 	}
 }
 
-func lexLineComment(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, []rune) {
-	t := s.Scan()
+func lexLineComment(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 	switch t {
-	case scanner.EOF:
-		return nil, nil
+	case '\r':
+		fallthrough
 	case '\n':
 		//End of comment
 		//^ Was that meta or what?
@@ -81,12 +82,8 @@ func lexLineComment(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfun
 	}
 }
 
-func lexOp(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, []rune) {
-	t := s.Scan()
+func lexOp(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 	switch t {
-	case scanner.EOF:
-		tokens <- Token{operation, string(part)}
-		return nil, nil
 	case ' ':
 		fallthrough
 	case '\t':
@@ -105,11 +102,8 @@ func lexOp(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, []rune
 	}
 }
 
-func lexParam(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, []rune) {
-	t := s.Scan()
+func lexParam(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 	switch t {
-	case scanner.EOF:
-		return nil, nil
 	case '#':
 		fallthrough
 	case '%':
@@ -122,7 +116,7 @@ func lexParam(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, []r
 	case '\n':
 		return lexStart, nil
 	case 'r':
-		return lexRegister, nil
+		return lexRegister, append(part, t)
 	case '\'':
 		return lexCharLit, nil
 
@@ -152,11 +146,8 @@ func lexParam(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, []r
 	}
 }
 
-func lexRegister(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, []rune) {
-	t := s.Scan()
+func lexRegister(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 	switch t {
-	case scanner.EOF:
-		panic(t)
 	case ' ':
 		fallthrough
 	case '\t':
@@ -167,37 +158,45 @@ func lexRegister(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, 
 	}
 }
 
-func lexCharLit(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, []rune) {
-	t := s.Scan()
+var escaped = false
+
+func lexCharLit(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
+	println("lexCharLit", string(part), escaped)
 	switch t {
-	case scanner.EOF:
-		panic(t)
+	case '\\':
+		escaped = !escaped
+		return lexCharLit, append(part, t)
 	case '\'':
-		char, _, _, err := strconv.UnquoteChar(string(part), '\'')
-		if err != nil {
-			tokens <- Token{unknown, string(append(part, t))}
+		if !escaped {
+			println("End of charlit")
+			char, _, _, err := strconv.UnquoteChar(string(part), '\'')
+			if err != nil {
+				tokens <- Token{unknown, err.Error()}
+				return lexStart, nil
+			}
+			tokens <- Token{number, strconv.Itoa(int(char))}
+			return lexParam, nil
 		}
-		tokens <- Token{register, strconv.Itoa(int(char))}
-		return lexParam, nil
+		escaped = false
+		fallthrough
 	default:
-		tokens <- Token{unknown, string(append(part, t))}
 		return lexCharLit, append(part, t)
 	}
 }
 
-func lexNumberLit(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, []rune) {
-	t := s.Scan()
+func lexNumberLit(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 	switch t {
-	case scanner.EOF:
-		panic(t)
 	case ' ':
 		fallthrough
 	case '\t':
 		tokens <- Token{number, string(part)}
 		return lexParam, nil
+	case '\n':
+		tokens <- Token{number, string(part)}
+		return lexStart, nil
 
 	case '0':
-		return lexRadix, append(part, t)
+		fallthrough
 	case '1':
 		fallthrough
 	case '2':
@@ -246,13 +245,12 @@ func lexNumberLit(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc,
 	}
 }
 
-func lexRadix(tokens chan<- Token, s scanner.Scanner, part []rune) (lexfunc, []rune) {
-	t := s.Scan()
+func lexRadix(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 	switch t {
-	case scanner.EOF:
-		panic(t)
 	case 'x':
+		fallthrough
 	case 'o':
+		fallthrough
 	case 'b':
 		return lexNumberLit, append(part, t)
 	default:
