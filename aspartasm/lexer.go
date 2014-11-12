@@ -2,10 +2,8 @@ package aspartasm
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"strconv"
-	"strings"
 )
 
 type Token struct {
@@ -22,61 +20,163 @@ const (
 	sträng    = "string"
 )
 
+type lexfunc func(chan<- Token, rune, []rune) (lexfunc, []rune)
+
 func lex(in io.Reader) <-chan Token {
-	scanner := bufio.NewScanner(in)
-	scanner.Split(bufio.ScanWords)
 	tokens := make(chan Token, 3)
+	bufin := bufio.NewReader(in)
 
 	go func() {
 		defer close(tokens)
+		defer func() {
+			if r := recover(); r != nil {
+				//Probably EOF at bad time
+			}
+		}()
+
 		// Set the split function for the scanning operation.
-		for scanner.Scan() {
-			s := scanner.Text()
-			//Check language features:
-
-			if strings.HasSuffix(s, ":") {
-				s = strings.TrimRight(s, ":")
-				tokens <- Token{label, s[:len(s)-2]}
-				continue
-			}
-			if _, err := MapOperation(s); err == nil {
-				tokens <- Token{operation, s}
-				continue
-			}
-
-			if strings.HasPrefix(s, "r") {
-				tokens <- Token{register, s}
-				continue
-			}
-
-			if _, err := strconv.Atoi(s); err == nil {
-				tokens <- Token{number, s}
-				continue
-			}
-
-			if strings.HasPrefix(s, "'") &&
-				strings.HasSuffix(s, "'") && len(s) > 2 {
-				val, _, _, _ := strconv.UnquoteChar(s[1:len(s)-1], '"')
-				//Multibyte is dropped because we will drop extra bytes anyway shortly.
-				//The tail is dropped because it should not be there
-				//the error is dropped because then we just give a zero literal.
-				//println("Char literal", s, "=", int(val), "detected:", err.Error())
-				//println("Multi-byte:", multi, "; Tail:", tail)
-				tokens <- Token{number, strconv.Itoa(int(val))}
-				continue
-			}
-
-			if strings.HasPrefix(s, "'") &&
-				strings.HasSuffix(s, "'") {
-				var str string
-				fmt.Sscanf(s, "%q", &str)
-				tokens <- Token{sträng, str}
-				continue
-			}
-
-			tokens <- Token{unknown, s}
+		f := lexfunc(lexStart)
+		var part []rune
+		t, _, err := bufin.ReadRune()
+		for !(f == nil || err != nil) {
+			f, part = f(tokens, t, part)
+			t, _, err = bufin.ReadRune()
 		}
 	}()
 
 	return tokens
+}
+
+func lexStart(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
+	switch t {
+	case ' ', '\n', '\t':
+		return lexStart, nil
+	case '%', '#':
+		return lexLineComment, nil
+	default:
+		return lexOp, []rune{rune(byte(t))}
+	}
+}
+
+func lexLineComment(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
+	switch t {
+	case '\r', '\n':
+		//End of comment
+		//^ Was that meta or what?
+		return lexStart, nil
+	default:
+		//Drop all input until comment end
+		return lexLineComment, nil
+	}
+}
+
+func lexOp(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
+	switch t {
+	case ' ':
+		fallthrough
+	case '\t':
+		tokens <- Token{operation, string(part)}
+		return lexParam, nil
+
+	case '\n':
+		return lexStart, nil
+
+	case ':':
+		//Was really a label all along
+		tokens <- Token{label, string(part)}
+		return lexStart, nil
+	default:
+		return lexOp, append(part, t)
+	}
+}
+
+func lexParam(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
+	switch t {
+	case '#', '%':
+		return lexLineComment, nil
+	case ' ', '\t':
+		return lexParam, nil
+
+	case '\n':
+		return lexStart, nil
+	case 'r':
+		return lexRegister, append(part, t)
+	case '\'':
+		return lexCharLit, nil
+
+	case '0':
+		return lexRadix, append(part, t)
+	case '1', '2', '3', '4', '5', '6', '7', '8', '9':
+		return lexNumberLit, append(part, t)
+	default:
+		tokens <- Token{unknown, string(append(part, t))}
+		return lexParam, nil
+	}
+}
+
+func lexRegister(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
+	switch t {
+	case ' ', '\t':
+		tokens <- Token{register, string(part)}
+		return lexParam, nil
+	case '\n':
+		tokens <- Token{register, string(part)}
+		return lexStart, nil
+	default:
+		return lexRegister, append(part, t)
+	}
+}
+
+var escaped = false
+
+func lexCharLit(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
+	switch t {
+	case '\\':
+		escaped = !escaped
+		return lexCharLit, append(part, t)
+	case '\'':
+		if !escaped {
+			char, _, _, err := strconv.UnquoteChar(string(part), '\'')
+			if err != nil {
+				tokens <- Token{unknown, err.Error()}
+				return lexStart, nil
+			}
+			tokens <- Token{number, strconv.Itoa(int(char))}
+			return lexParam, nil
+		}
+		fallthrough
+	default:
+		escaped = false
+		return lexCharLit, append(part, t)
+	}
+}
+
+func lexNumberLit(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
+	switch t {
+	case ' ', '\t':
+		tokens <- Token{number, string(part)}
+		return lexParam, nil
+	case '\n':
+		tokens <- Token{number, string(part)}
+		return lexStart, nil
+
+	case '0', '1', '2', '3', '4', '5', '6', '7',
+		'8', '9', 'A', 'a', 'B', 'b', 'C', 'c',
+		'D', 'd', 'E', 'e', 'F', 'f':
+		return lexNumberLit, append(part, t)
+	default:
+		tokens <- Token{unknown, string(append(part, t))}
+		return lexParam, nil
+	}
+}
+
+func lexRadix(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
+	switch t {
+	case 'x', 'o', 'b':
+		return lexNumberLit, append(part, t)
+	default:
+		tokens <- Token{unknown, string(append(part, t))}
+		return lexNumberLit, nil
+	}
+	return lexNumberLit, nil
 }

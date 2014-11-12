@@ -88,6 +88,7 @@ func ReadInstructions(raw io.Reader) ([]Inst, error) {
 		args, err := Op(opCode).ReadArgs(in)
 
 		if err != nil {
+			println("args")
 			return nil, err
 		}
 
