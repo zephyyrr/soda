@@ -3,7 +3,6 @@ package aspartasm
 import (
 	"bufio"
 	"io"
-	"log"
 	"strconv"
 )
 
@@ -43,9 +42,6 @@ func lex(in io.Reader) <-chan Token {
 			f, part = f(tokens, t, part)
 			t, _, err = bufin.ReadRune()
 		}
-
-		log.Println(err)
-
 	}()
 
 	return tokens
@@ -153,6 +149,9 @@ func lexRegister(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 	case '\t':
 		tokens <- Token{register, string(part)}
 		return lexParam, nil
+	case '\n':
+		tokens <- Token{register, string(part)}
+		return lexStart, nil
 	default:
 		return lexRegister, append(part, t)
 	}
@@ -161,14 +160,12 @@ func lexRegister(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 var escaped = false
 
 func lexCharLit(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
-	println("lexCharLit", string(part), escaped)
 	switch t {
 	case '\\':
 		escaped = !escaped
 		return lexCharLit, append(part, t)
 	case '\'':
 		if !escaped {
-			println("End of charlit")
 			char, _, _, err := strconv.UnquoteChar(string(part), '\'')
 			if err != nil {
 				tokens <- Token{unknown, err.Error()}
@@ -177,9 +174,9 @@ func lexCharLit(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 			tokens <- Token{number, strconv.Itoa(int(char))}
 			return lexParam, nil
 		}
-		escaped = false
 		fallthrough
 	default:
+		escaped = false
 		return lexCharLit, append(part, t)
 	}
 }
