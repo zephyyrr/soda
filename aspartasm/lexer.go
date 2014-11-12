@@ -49,15 +49,9 @@ func lex(in io.Reader) <-chan Token {
 
 func lexStart(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 	switch t {
-	case ' ':
-		fallthrough
-	case '\n':
-		fallthrough
-	case '\t':
+	case ' ', '\n', '\t':
 		return lexStart, nil
-	case '%':
-		fallthrough
-	case '#':
+	case '%', '#':
 		return lexLineComment, nil
 	default:
 		return lexOp, []rune{rune(byte(t))}
@@ -66,9 +60,7 @@ func lexStart(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 
 func lexLineComment(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 	switch t {
-	case '\r':
-		fallthrough
-	case '\n':
+	case '\r', '\n':
 		//End of comment
 		//^ Was that meta or what?
 		return lexStart, nil
@@ -100,13 +92,9 @@ func lexOp(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 
 func lexParam(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 	switch t {
-	case '#':
-		fallthrough
-	case '%':
+	case '#', '%':
 		return lexLineComment, nil
-	case ' ':
-		fallthrough
-	case '\t':
+	case ' ', '\t':
 		return lexParam, nil
 
 	case '\n':
@@ -118,23 +106,7 @@ func lexParam(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 
 	case '0':
 		return lexRadix, append(part, t)
-	case '1':
-		fallthrough
-	case '2':
-		fallthrough
-	case '3':
-		fallthrough
-	case '4':
-		fallthrough
-	case '5':
-		fallthrough
-	case '6':
-		fallthrough
-	case '7':
-		fallthrough
-	case '8':
-		fallthrough
-	case '9':
+	case '1', '2', '3', '4', '5', '6', '7', '8', '9':
 		return lexNumberLit, append(part, t)
 	default:
 		tokens <- Token{unknown, string(append(part, t))}
@@ -144,9 +116,7 @@ func lexParam(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 
 func lexRegister(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 	switch t {
-	case ' ':
-		fallthrough
-	case '\t':
+	case ' ', '\t':
 		tokens <- Token{register, string(part)}
 		return lexParam, nil
 	case '\n':
@@ -183,58 +153,16 @@ func lexCharLit(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 
 func lexNumberLit(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 	switch t {
-	case ' ':
-		fallthrough
-	case '\t':
+	case ' ', '\t':
 		tokens <- Token{number, string(part)}
 		return lexParam, nil
 	case '\n':
 		tokens <- Token{number, string(part)}
 		return lexStart, nil
 
-	case '0':
-		fallthrough
-	case '1':
-		fallthrough
-	case '2':
-		fallthrough
-	case '3':
-		fallthrough
-	case '4':
-		fallthrough
-	case '5':
-		fallthrough
-	case '6':
-		fallthrough
-	case '7':
-		fallthrough
-	case '8':
-		fallthrough
-	case '9':
-		fallthrough
-	case 'A':
-		fallthrough
-	case 'a':
-		fallthrough
-	case 'B':
-		fallthrough
-	case 'b':
-		fallthrough
-	case 'C':
-		fallthrough
-	case 'c':
-		fallthrough
-	case 'D':
-		fallthrough
-	case 'd':
-		fallthrough
-	case 'E':
-		fallthrough
-	case 'e':
-		fallthrough
-	case 'F':
-		fallthrough
-	case 'f':
+	case '0', '1', '2', '3', '4', '5', '6', '7',
+		'8', '9', 'A', 'a', 'B', 'b', 'C', 'c',
+		'D', 'd', 'E', 'e', 'F', 'f':
 		return lexNumberLit, append(part, t)
 	default:
 		tokens <- Token{unknown, string(append(part, t))}
@@ -244,11 +172,7 @@ func lexNumberLit(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 
 func lexRadix(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 	switch t {
-	case 'x':
-		fallthrough
-	case 'o':
-		fallthrough
-	case 'b':
+	case 'x', 'o', 'b':
 		return lexNumberLit, append(part, t)
 	default:
 		tokens <- Token{unknown, string(append(part, t))}
