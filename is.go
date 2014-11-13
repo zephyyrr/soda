@@ -84,6 +84,10 @@ func sodaIS(ins byte) Operation {
 		return loadb
 	case 0x53:
 		return loadi
+	case 0x54:
+		return loadil
+	case 0x55:
+		return loadih
 	case 0x56:
 		return store
 	case 0x57:
@@ -97,8 +101,12 @@ func sodaIS(ins byte) Operation {
 		return branch
 	case 0x69:
 		return branchEq
+	case 0x6A:
+		return branchNeq
 	case 0x6B:
 		return branchLess
+	case 0x6C:
+		return branchLessEq
 
 	case 0x81:
 		return printi
@@ -145,7 +153,7 @@ func zero(v *vm, a, b, c byte) error {
 }
 
 func addition(v *vm, a, b, c byte) error {
-	v.regs[a] = register(int32(v.regs[b]) + int32(v.regs[c]))
+	v.regs[a] = v.regs[b] + v.regs[c]
 	return nil
 }
 
@@ -175,32 +183,32 @@ func power(v *vm, a, b, c byte) error {
 }
 
 func uaddition(v *vm, a, b, c byte) error {
-	v.regs[a] = v.regs[b] + v.regs[c]
+	v.regs[a] = register(uint32(v.regs[b]) + uint32(v.regs[c]))
 	return nil
 }
 
 func usubtraction(v *vm, a, b, c byte) error {
-	v.regs[a] = v.regs[b] - v.regs[c]
+	v.regs[a] = register(uint32(v.regs[b]) - uint32(v.regs[c]))
 	return nil
 }
 
 func umultiplication(v *vm, a, b, c byte) error {
-	v.regs[a] = v.regs[b] * v.regs[c]
+	v.regs[a] = register(uint32(v.regs[b]) * uint32(v.regs[c]))
 	return nil
 }
 
 func udivision(v *vm, a, b, c byte) error {
-	v.regs[a] = v.regs[b] / v.regs[c]
+	v.regs[a] = register(uint32(v.regs[b]) / uint32(v.regs[c]))
 	return nil
 }
 
 func umod(v *vm, a, b, c byte) error {
-	v.regs[a] = v.regs[b] % v.regs[c]
+	v.regs[a] = register(uint32(v.regs[b]) % uint32(v.regs[c]))
 	return nil
 }
 
 func upower(v *vm, a, b, c byte) error {
-	v.regs[a] = register(math.Pow(float64(v.regs[b]), float64(v.regs[c])))
+	v.regs[a] = register(math.Pow(float64(uint32(v.regs[b])), float64(uint32(v.regs[c]))))
 	return nil
 }
 
@@ -239,32 +247,34 @@ func powerI(v *vm, a, b, c byte) error {
 }
 
 func uadditionI(v *vm, a, b, c byte) error {
-	v.regs[a] += register(b)<<16 | register(c)
+	v.regs[a] += register(uint32(b)<<16 | uint32(c))
 	return nil
 }
 
 func usubtractionI(v *vm, a, b, c byte) error {
-	v.regs[a] -= register(b)<<16 | register(c)
+	v.regs[a] -= register(uint32(b)<<16 | uint32(c))
 	return nil
 }
 
 func umultiplicationI(v *vm, a, b, c byte) error {
-	v.regs[a] *= register(b)<<16 | register(c)
+	v.regs[a] *= register(uint32(b)<<16 | uint32(c))
 	return nil
 }
 
 func udivisionI(v *vm, a, b, c byte) error {
-	v.regs[a] /= register(b)<<16 | register(c)
+	v.regs[a] /= register(uint32(b)<<16 | uint32(c))
 	return nil
 }
 
 func umodI(v *vm, a, b, c byte) error {
-	v.regs[a] %= register(b)<<16 | register(c)
+	v.regs[a] %= register(uint32(b)<<16 | uint32(c))
 	return nil
 }
 
 func upowerI(v *vm, a, b, c byte) error {
-	v.regs[a] = register(math.Pow(float64(v.regs[a]), float64(register(b)<<16|register(c))))
+	v.regs[a] = register(math.Pow(
+		float64(uint32(v.regs[a])),
+		float64(register(b)<<16|register(c))))
 	return nil
 }
 
@@ -293,12 +303,12 @@ func invert(v *vm, a, b, c byte) error {
 }
 
 func lshift(v *vm, a, b, c byte) error {
-	v.regs[a] = v.regs[b] << v.regs[c]
+	v.regs[a] = v.regs[b] << uint32(v.regs[c])
 	return nil
 }
 
 func rshift(v *vm, a, b, c byte) error {
-	v.regs[a] = v.regs[b] >> v.regs[c]
+	v.regs[a] = v.regs[b] >> uint32(v.regs[c])
 	return nil
 }
 
@@ -308,20 +318,34 @@ func jump(v *vm, a, b, c byte) error {
 }
 
 func branch(v *vm, a, b, c byte) error {
-	v.code.Seek(int64(v.regs[a]), 0)
+	v.code.Seek(int64(v.regs[a]), 1)
 	return nil
 }
 
 func branchEq(v *vm, a, b, c byte) error {
 	if v.regs[b] == v.regs[c] {
-		v.code.Seek(int64(v.regs[a]), 0)
+		v.code.Seek(int64(v.regs[a]), 1)
+	}
+	return nil
+}
+
+func branchNeq(v *vm, a, b, c byte) error {
+	if v.regs[b] != v.regs[c] {
+		v.code.Seek(int64(v.regs[a]), 1)
 	}
 	return nil
 }
 
 func branchLess(v *vm, a, b, c byte) error {
 	if v.regs[b] < v.regs[c] {
-		v.code.Seek(int64(v.regs[a]), 0)
+		v.code.Seek(int64(v.regs[a]), 1)
+	}
+	return nil
+}
+
+func branchLessEq(v *vm, a, b, c byte) error {
+	if v.regs[b] <= v.regs[c] {
+		v.code.Seek(int64(v.regs[a]), 1)
 	}
 	return nil
 }
@@ -352,6 +376,18 @@ func loadb(v *vm, a, b, c byte) (err error) {
 
 func loadi(v *vm, a, b, c byte) error {
 	v.regs[a] = register(b)<<8 | register(c)
+	return nil
+}
+
+func loadil(v *vm, a, b, c byte) error {
+	v.regs[a] = register(uint32(v.regs[a]) & 0xFFFF0000)
+	v.regs[a] |= register(b)<<8 | register(c)
+	return nil
+}
+
+func loadih(v *vm, a, b, c byte) error {
+	v.regs[a] &= 0x0000FFFF
+	v.regs[a] |= register(b)<<24 | register(c)<<16
 	return nil
 }
 

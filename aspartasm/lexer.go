@@ -104,6 +104,8 @@ func lexParam(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 	case '\'':
 		return lexCharLit, nil
 
+	case '-':
+		return lexNegNumberLit, append(part, t)
 	case '0':
 		return lexRadix, append(part, t)
 	case '1', '2', '3', '4', '5', '6', '7', '8', '9':
@@ -172,6 +174,12 @@ func lexNumberLit(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 
 func lexRadix(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 	switch t {
+	case ' ', '\t':
+		tokens <- Token{number, string(part)}
+		return lexParam, nil
+	case '\n':
+		tokens <- Token{number, string(part)}
+		return lexStart, nil
 	case 'x', 'o', 'b':
 		return lexNumberLit, append(part, t)
 	default:
@@ -179,4 +187,16 @@ func lexRadix(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 		return lexNumberLit, nil
 	}
 	return lexNumberLit, nil
+}
+
+func lexNegNumberLit(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
+	switch t {
+	case '0':
+		return lexRadix, append(part, t)
+	case '1', '2', '3', '4', '5', '6', '7',
+		'8', '9':
+		return lexNumberLit, append(part, t)
+	}
+	tokens <- Token{unknown, string(append(part, t))}
+	return lexStart, nil
 }
