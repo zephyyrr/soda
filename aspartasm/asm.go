@@ -7,6 +7,8 @@ import (
 
 var ops = map[string]byte{
 	"HALT": 0x00,
+	"BRKP": 0x01,
+	"MOV":  0x02,
 	"NRS":  0x0A,
 	"PRS":  0x0B,
 	"MOVS": 0x0C,
