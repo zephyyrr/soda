@@ -9,6 +9,16 @@ func sodaIS(ins byte) Operation {
 	switch ins {
 	case 0x00:
 		return halt
+	case 0x0A:
+		return nRegSet
+	case 0x0B:
+		return pRegSet
+	case 0x0C:
+		return cReg
+	case 0x0D:
+		return move
+	case 0x0F:
+		return breakpoint
 	case 0x10:
 		return zero
 	case 0x11:
@@ -136,6 +146,16 @@ func pRegSet(v *vm, a, b, c byte) error {
 
 func cReg(v *vm, a, b, c byte) error {
 	v.regsets[v.regs[a]][v.regs[c]] = v.regsets[v.regs[b]][v.regs[c]]
+	return nil
+}
+
+func move(v *vm, a, b, c byte) error {
+	v.regs[a] = v.regs[b]
+	return nil
+}
+
+func breakpoint(v *vm, a, b, c byte) error {
+	v.Break()
 	return nil
 }
 
