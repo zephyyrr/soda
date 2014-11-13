@@ -1,15 +1,19 @@
-# First 100 of Fibonacci sequence
+# First 10 of Fibonacci sequence
 ldi r0 0
 ldi r1 1
-ldi r4 100
+ldi r4 10
 zero r5
 ldil r42 -28
 ldih r42 -28
+prnii 0
+prnci '\n'
+prnii 1
+prnci '\n'
 
-add r2 r1 r5 #MOV r2 r1
+MOV r2 r1
 add r1 r0 r1
-add r0 r2 r5 #MOV r0 r2
+MOV r0 r2
 PRNI r1
-PRNCI ' '
+BRKP
 SUBI r4 1
 BRAN r42 r4 r5
