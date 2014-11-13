@@ -8,8 +8,8 @@ import (
 
 const (
 	HALT Op = iota
-	_
-	_
+	BRKP
+	MOV
 	_
 	_
 	_
@@ -163,6 +163,8 @@ const (
 
 var opToArgReader = map[Op]argReader{
 	HALT: noRegs,
+	BRKP: noRegs,
+	MOV:  twoRegs,
 
 	NRS:  noRegs,
 	PRS:  noRegs,
