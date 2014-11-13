@@ -1,0 +1,41 @@
+# Implementation of fizzbuzz in cola
+# Uses the not yet fully implemented labels feature
+# So this will not compile on current 0.8 release
+
+main:
+	zero r0 # Zero register
+	zero r1 # Current index
+	ldi r3 3 # For modding with 3
+	ldi r5 5 # For modding with 5
+
+	ldil r10 :loop % Replace with actual addresses to compile
+	ldih r10 :loop
+	ldil r11 :fizz
+	ldih r11 :fizz
+	ldil r12 :buzz
+	ldih r12 :buzz
+
+
+loop:
+	addi r0 1 # Next number in loop
+	mod r2 r1 r5
+	jmpe r12 r2 r0 # Branch to buzz if r1 mod 5 == 0
+	mod r2 r1 r3
+	jmpn r11 r2 r0 # continue if r1 mod 3 != 0
+	#fallthrough to fizz
+
+fizz:
+	PRNCI 'F'
+	PRNCI 'i'
+	PRNCI 'z'
+	PRNCI 'z'
+	mod r2 r1 r5
+	jmpn r10 r2 r0 # continue if r1 mod 5 != 0
+	#fallthorugh to buzz
+
+buzz:
+	PRNCI 'B'
+	PRNCI 'u'
+	PRNCI 'z'
+	PRNCI 'z'
+	jmp r10
