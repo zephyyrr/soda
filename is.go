@@ -9,16 +9,17 @@ func sodaIS(ins byte) Operation {
 	switch ins {
 	case 0x00:
 		return halt
+	case 0x01:
+		return breakpoint
+	case 0x02:
+		return move
 	case 0x0A:
 		return nRegSet
 	case 0x0B:
 		return pRegSet
 	case 0x0C:
 		return cReg
-	case 0x0D:
-		return move
-	case 0x0F:
-		return breakpoint
+
 	case 0x10:
 		return zero
 	case 0x11:
