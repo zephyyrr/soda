@@ -1,0 +1,39 @@
+ldi r0 3000
+ldi r1 4000
+
+ldi r2 16
+lsh r1 r1 r2
+or r0 r0 r1
+
+prni r0
+prnci 32
+
+malc r5 r2
+ldi r6 0
+stw r0 r5 r6
+ldi r0 0
+ldw r42 r5 r6
+prni r42
+free r5
+
+prnci 10
+
+ldb r43 r5 r6
+prni r43
+prnci 32
+addui r6 1
+
+ldb r43 r5 r6
+prni r43
+prnci 32
+addui r6 1
+
+ldb r43 r5 r6
+prni r43
+prnci 32
+addui r6 1
+
+ldb r43 r5 r6
+prni r43
+prnc 32
+addui r6 1

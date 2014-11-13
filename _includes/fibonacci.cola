@@ -1,0 +1,19 @@
+# First 10 of Fibonacci sequence
+ldi r0 0
+ldi r1 1
+ldi r4 10
+zero r5
+ldil r42 -28
+ldih r42 -28
+prnii 0
+prnci '\n'
+prnii 1
+prnci '\n'
+
+MOV r2 r1
+add r1 r0 r1
+MOV r0 r2
+PRNI r1
+BRKP
+SUBI r4 1
+BRAN r42 r4 r5
