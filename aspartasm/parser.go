@@ -37,7 +37,6 @@ func parseStart(tree *AST, token Token) (parseFunc, bool, error) {
 		tree.append(token)
 		return parseOperation, false, nil
 	}
-	println("start unknown")
 	return nil, true, UnexpectedToken(token)
 }
 
@@ -51,7 +50,6 @@ func parseOperation(tree *AST, token Token) (parseFunc, bool, error) {
 	default:
 		return parseStart(tree, token)
 	}
-	println("operation unknown")
 	return nil, true, UnexpectedToken(token)
 }
 
