@@ -209,7 +209,7 @@ var opToArgReader = map[Op]argReader{
 	LDB:  threeRegs,
 	LDI:  oneRegImm,
 	LDIL: oneRegImm,
-	LDIH: oneRegImm,
+	LDIH: oneRegImm32,
 	STW:  threeRegs,
 	STB:  threeRegs,
 	FREE: oneReg,
@@ -343,7 +343,22 @@ func oneRegImm(in *bufio.Reader) ([]Arg, error) {
 		return nil, err
 	}
 
-	return []Arg{Reg(r1), Imm(imm)}, nil
+	return []Arg{Reg(r1), imm}, nil
+}
+
+func oneRegImm32(in *bufio.Reader) ([]Arg, error) {
+	r1, err := in.ReadByte()
+
+	if err != nil {
+		return nil, err
+	}
+
+	var imm Imm
+	if err := binary.Read(in, binary.BigEndian, &imm); err != nil {
+		return nil, err
+	}
+
+	return []Arg{Reg(r1), Imm32(imm) << 16}, nil
 }
 
 func oneImm(in *bufio.Reader) ([]Arg, error) {
@@ -358,5 +373,5 @@ func oneImm(in *bufio.Reader) ([]Arg, error) {
 		return nil, err
 	}
 
-	return []Arg{Imm(imm)}, nil
+	return []Arg{imm}, nil
 }
