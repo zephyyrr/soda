@@ -54,6 +54,12 @@ func (i Imm) String() string {
 	return fmt.Sprintf("%d", i)
 }
 
+type Imm32 int32
+
+func (i Imm32) String() string {
+	return fmt.Sprintf("%d", i)
+}
+
 // ReadInstructions reads a sequence of Soda instructions from an io.Reader.
 // The first 4 bytes read must be the Soda magic bytes.
 func ReadInstructions(raw io.Reader) ([]Inst, error) {

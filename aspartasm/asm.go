@@ -46,6 +46,8 @@ var ops = map[string]byte{
 	"LDW":  0x51,
 	"LDB":  0x52,
 	"LDI":  0x53,
+	"LDIL": 0x54,
+	"LDIH": 0x55,
 	"STW":  0x56,
 	"STB":  0x57,
 	"FREE": 0x5F,

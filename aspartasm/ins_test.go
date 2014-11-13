@@ -13,6 +13,7 @@ var instTable = map[string]Inst{
 	"PRNC 10":       Inst{PRNC, []Arg{Imm(10)}},
 	"JMP r32":       Inst{JMP, []Arg{Reg(32)}},
 	"PRNCI 10":      Inst{PRNCI, []Arg{Imm(10)}},
+	"LDIH r1 -1":    Inst{LDIH, []Arg{Reg(1), Imm32(-1)}},
 }
 
 func TestInstString(t *testing.T) {
@@ -69,6 +70,19 @@ var binaryTable = []readTestStruct{
 		err: nil,
 		ins: []string{
 			"PRNCI 10",
+		},
+	},
+	{
+		name: "load low and high -28",
+		bin: []byte{
+			0x53, 0x4F, 0x44, 0x41,
+			byte(LDIL), 1, 0xFF, 0xE4,
+			byte(LDIH), 1, 0xFF, 0xFF,
+		},
+		err: nil,
+		ins: []string{
+			"LDIL r1 -28",
+			"LDIH r1 -65536",
 		},
 	},
 	{

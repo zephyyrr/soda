@@ -83,6 +83,11 @@ func (v *vm) Execute() error {
 	return nil
 }
 
+//Halts execution if in debug mode until user gives step command.
+func (v *vm) Break() {
+	//Nop for now.
+}
+
 func (v *vm) Messages() <-chan string {
 	return v.messages
 }
