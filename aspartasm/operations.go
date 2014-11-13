@@ -96,8 +96,8 @@ const (
 	LDW
 	LDB
 	LDI
-	_
-	_
+	LDIL
+	LDIH
 	STW
 	STB
 	_
@@ -208,6 +208,8 @@ var opToArgReader = map[Op]argReader{
 	LDW:  threeRegs,
 	LDB:  threeRegs,
 	LDI:  oneRegImm,
+	LDIL: oneRegImm,
+	LDIH: oneRegImm,
 	STW:  threeRegs,
 	STB:  threeRegs,
 	FREE: oneReg,

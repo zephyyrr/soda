@@ -81,10 +81,17 @@ func linearize_rec(tree AST, curr soda.Instruction, i int) (soda.Instruction, er
 		}
 		return curr, err
 	case number:
-		//Place number in slots B and C
-		num, _ := strconv.Atoi(tree.Token.Value)
-		curr.B = byte(num >> 8)
-		curr.C = byte(num)
+		if curr.Operation == byte(LDIH) {
+			//Loading the high bits.
+			num, _ := strconv.Atoi(tree.Token.Value)
+			curr.B = byte(num >> 24)
+			curr.C = byte(num >> 16)
+		} else {
+			//Place number in slots B and C
+			num, _ := strconv.Atoi(tree.Token.Value)
+			curr.B = byte(num >> 8)
+			curr.C = byte(num)
+		}
 	}
 	return curr, err
 }
