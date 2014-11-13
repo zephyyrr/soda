@@ -10,6 +10,8 @@ const testCode = `# Testcode.
 main:
 	LDI r0 1
 	ldi r1 0x45
+	ldi r3 0
+	ldi r5 -28
 	LdI r2 0b01010101
 
 	% This is a comment
@@ -33,6 +35,14 @@ func TestLexer(t *testing.T) {
 		Token{operation, "ldi"},
 		Token{register, "r1"},
 		Token{number, "0x45"},
+
+		Token{operation, "ldi"},
+		Token{register, "r3"},
+		Token{number, "0"},
+
+		Token{operation, "ldi"},
+		Token{register, "r5"},
+		Token{number, "-28"},
 
 		Token{operation, "LdI"},
 		Token{register, "r2"},
