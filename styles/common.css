@@ -105,10 +105,11 @@ table#operations th {
 }
 
 code {
+	display: block;
 	background-color: white;
 }
 
-pre code {
+pre {
 	padding: 10px;
 	margin: 0.5em;
 }
