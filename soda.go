@@ -85,7 +85,10 @@ func (v *vm) Execute() error {
 
 //Halts execution if in debug mode until user gives step command.
 func (v *vm) Break() {
-	//Nop for now.
+	if v.options.Debug {
+		v.sendMessagef("Breakpoint!")
+		//Nop for now.
+	}
 }
 
 func (v *vm) Messages() <-chan string {
