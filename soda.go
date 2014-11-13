@@ -8,7 +8,7 @@ import (
 
 const wordsize = 32
 
-type word uint32
+type word int32
 
 type register word
 
@@ -46,7 +46,7 @@ func New(code tape, options Options) *vm {
 		is:         sodaIS,
 		halting:    false,
 		options:    options,
-		messages:   make(chan string, 1),
+		messages:   make(chan string, 64),
 		MainMemory: make(MainMemory),
 	}
 	v.regs = &v.regsets[v.currset]
@@ -54,6 +54,7 @@ func New(code tape, options Options) *vm {
 }
 
 func (v *vm) Execute() error {
+	defer close(v.messages)
 	if !v.verify() {
 		return InvalidCode
 	}
