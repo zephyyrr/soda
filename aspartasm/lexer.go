@@ -79,6 +79,7 @@ func lexOp(tokens chan<- Token, t rune, part []rune) (lexfunc, []rune) {
 		return lexParam, nil
 
 	case '\n':
+		tokens <- Token{operation, string(part)}
 		return lexStart, nil
 
 	case ':':

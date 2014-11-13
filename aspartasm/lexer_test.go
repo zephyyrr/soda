@@ -18,6 +18,7 @@ main:
 	# PRNCI 'S'
 	PRNCI ' '
 	PRNCI '\''
+	BRKP
 	PRNCI '\n'
 	ADD r0 r0 r2
 	HALT 42
@@ -53,6 +54,8 @@ func TestLexer(t *testing.T) {
 
 		Token{operation, "PRNCI"},
 		Token{number, "39"},
+
+		Token{operation, "BRKP"},
 
 		Token{operation, "PRNCI"},
 		Token{number, "10"},
