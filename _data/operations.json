@@ -6,11 +6,27 @@
 		"implemented": true,
 		"description": "Halts execution."
 	},
+	
+	{
+		"asm": "BRKP",
+		"byte": "0x01",
+		"syntax": "BRKP",
+		"implemented": true,
+		"description": "Breakpoint for execution"
+	},
+	
+	{
+		"asm": "MOV",
+		"byte": "0x02",
+		"syntax": "MOV ra rb",
+		"implemented": true,
+		"description": "Copies the contents of rb into ra."
+	},
 
 	{
 		"asm": "NRS",
 		"byte": "0x0A",
-		"syntax": "PRS",
+		"syntax": "NRS",
 		"implemented": true,
 		"description": "Changes current register set to next in order."
 	},
@@ -18,7 +34,7 @@
 	{
 		"asm": "PRS",
 		"byte": "0x0B",
-		"syntax": "NRS",
+		"syntax": "PRS",
 		"implemented": true,
 		"description": "Changes current register set to previous in order."
 	},
@@ -43,7 +59,7 @@
 		"asm": "ADD",
 		"byte": "0x11",
 		"syntax": "ADD ra rb rc",
-		"implemented": false,
+		"implemented": true,
 		"description": "ra = rb + rc"
 	},
 
@@ -51,7 +67,7 @@
 		"asm": "SUB",
 		"byte": "0x12",
 		"syntax": "SUB ra rb rc",
-		"implemented": false,
+		"implemented": true,
 		"description": "ra = rb - rc"
 	},
 
@@ -59,7 +75,7 @@
 		"asm": "MUL",
 		"byte": "0x13",
 		"syntax": "MUL ra rb rc",
-		"implemented": false,
+		"implemented": true,
 		"description": "ra = rb * rc"
 	},
 
@@ -67,7 +83,7 @@
 		"asm": "DIV",
 		"byte": "0x14",
 		"syntax": "DIV ra rb rc",
-		"implemented": false,
+		"implemented": true,
 		"description": "ra = rb / rc"
 	},
 
@@ -75,7 +91,7 @@
 		"asm": "MOD",
 		"byte": "0x15",
 		"syntax": "MOD ra rb rc",
-		"implemented": false,
+		"implemented": true,
 		"description": "ra = rb mod rc"
 	},
 
@@ -83,8 +99,8 @@
 		"asm": "POW",
 		"byte": "0x16",
 		"syntax": "POW ra rb rc",
-		"implemented": false,
-		"description": "ra = rb^rc"
+		"implemented": true,
+		"description": "ra = rb<sup>rc</sup>"
 	},
 
 	{
@@ -92,7 +108,7 @@
 		"byte": "0x19",
 		"syntax": "ADDU ra rb rc",
 		"implemented": true,
-		"description": "ra = rb + rc"
+		"description": "ra = rb + rc (unsigned)"
 	},
 
 	{
@@ -100,7 +116,7 @@
 		"byte": "0x1A",
 		"syntax": "SUBU ra rb rc",
 		"implemented": true,
-		"description": "ra = rb - rc"
+		"description": "ra = rb - rc (unsigned)"
 	},
 
 	{
@@ -108,7 +124,7 @@
 		"byte": "0x1B",
 		"syntax": "MULU ra rb rc",
 		"implemented": true,
-		"description": "ra = rb * rc"
+		"description": "ra = rb * rc (unsigned)"
 	},
 
 	{
@@ -116,7 +132,7 @@
 		"byte": "0x1C",
 		"syntax": "DIVU ra rb rc",
 		"implemented": true,
-		"description": "ra = rb / rc"
+		"description": "ra = rb / rc (unsigned)"
 	},
 
 	{
@@ -124,7 +140,7 @@
 		"byte": "0x1D",
 		"syntax": "MODU ra rb rc",
 		"implemented": true,
-		"description": "ra = rb mod rc"
+		"description": "ra = rb mod r (unsigned)c"
 	},
 
 	{
@@ -132,7 +148,103 @@
 		"byte": "0x1E",
 		"syntax": "POWU ra rb rc",
 		"implemented": true,
-		"description": "ra = rb<sup>rc</sup>"
+		"description": "ra = rb<sup>rc</sup> (unsigned)"
+	},
+	
+		{
+		"asm": "ADDI",
+		"byte": "0x21",
+		"syntax": "ADD ra imm",
+		"implemented": true,
+		"description": "ra = ra + imm"
+	},
+
+	{
+		"asm": "SUBI",
+		"byte": "0x22",
+		"syntax": "SUB ra imm",
+		"implemented": true,
+		"description": "ra = ra - imm"
+	},
+
+	{
+		"asm": "MULI",
+		"byte": "0x23",
+		"syntax": "MUL ra imm",
+		"implemented": true,
+		"description": "ra = ra * imm"
+	},
+
+	{
+		"asm": "DIVI",
+		"byte": "0x24",
+		"syntax": "DIV ra imm",
+		"implemented": true,
+		"description": "ra = ra / imm"
+	},
+
+	{
+		"asm": "MODI",
+		"byte": "0x25",
+		"syntax": "MOD ra imm",
+		"implemented": true,
+		"description": "ra = ra mod imm"
+	},
+
+	{
+		"asm": "POWI",
+		"byte": "0x26",
+		"syntax": "POW ra imm",
+		"implemented": true,
+		"description": "ra = ra^imm"
+	},
+
+	{
+		"asm": "ADDUI",
+		"byte": "0x29",
+		"syntax": "ADDU ra imm",
+		"implemented": true,
+		"description": "ra = ra + imm (unsigned)"
+	},
+
+	{
+		"asm": "SUBUI",
+		"byte": "0x2A",
+		"syntax": "SUBU ra imm",
+		"implemented": true,
+		"description": "ra = ra - imm (unsigned)"
+	},
+
+	{
+		"asm": "MULUI",
+		"byte": "0x2B",
+		"syntax": "MULU ra imm",
+		"implemented": true,
+		"description": "ra = ra * imm (unsigned)"
+	},
+
+	{
+		"asm": "DIVUI",
+		"byte": "0x2C",
+		"syntax": "DIVU ra imm",
+		"implemented": true,
+		"description": "ra = ra / imm (unsigned)"
+	},
+
+	{
+		"asm": "MODUI",
+		"byte": "0x2D",
+		"syntax": "MODU ra imm",
+		"implemented": true,
+		"description": "ra = ra mod imm (unsigned)"
+	},
+
+	{
+		"asm": "POWUI",
+		"byte": "0x2E",
+		"syntax": "POWU ra imm",
+		"implemented": true,
+		"description": "ra = ra<sup>imm</sup> (unsigned)"
 	},
 
 	{
@@ -219,6 +331,22 @@
 		"syntax": "LDI ra immediate",
 		"implemented": true,
 		"description": "ra = immediate"
+	},
+	
+	{
+		"asm": "LDIL",
+		"byte": "0x54",
+		"syntax": "LDI ra immediate",
+		"implemented": true,
+		"description": "low bits of ra = immediate"
+	},
+	
+	{
+		"asm": "LDIH",
+		"byte": "0x55",
+		"syntax": "LDI ra immediate",
+		"implemented": true,
+		"description": "high bits of ra = immediate << 16"
 	},
 
 	{
@@ -331,5 +459,21 @@
 		"syntax": "PRNC ra",
 		"implemented": true,
 		"description": "Prints value in ra formatted as a ASCII encoded character."
+	},
+	
+	{
+		"asm": "PRNII",
+		"byte": "0x89",
+		"syntax": "PRNI imm",
+		"implemented": true,
+		"description": "Prints the immediate value formatted as decimal integer"
+	},
+
+	{
+		"asm": "PRNCI",
+		"byte": "0x8a",
+		"syntax": "PRNC imm",
+		"implemented": true,
+		"description": "Prints the immediate value formatted as a ASCII encoded character."
 	},
 ]
