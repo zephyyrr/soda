@@ -108,6 +108,14 @@ func sodaIS(ins byte) Operation {
 
 	case 0x61:
 		return jump
+	case 0x62:
+		return jumpEq
+	case 0x63:
+		return jumpNeq
+	case 0x64:
+		return jumpLess
+	case 0x65:
+		return jumpLessEq
 	case 0x68:
 		return branch
 	case 0x69:
@@ -335,6 +343,34 @@ func rshift(v *vm, a, b, c byte) error {
 
 func jump(v *vm, a, b, c byte) error {
 	v.code.Seek(int64(v.regs[a]), 0)
+	return nil
+}
+
+func jumpEq(v *vm, a, b, c byte) error {
+	if v.regs[b] == v.regs[c] {
+		v.code.Seek(int64(v.regs[a]), 0)
+	}
+	return nil
+}
+
+func jumpNeq(v *vm, a, b, c byte) error {
+	if v.regs[b] != v.regs[c] {
+		v.code.Seek(int64(v.regs[a]), 0)
+	}
+	return nil
+}
+
+func jumpLess(v *vm, a, b, c byte) error {
+	if v.regs[b] < v.regs[c] {
+		v.code.Seek(int64(v.regs[a]), 0)
+	}
+	return nil
+}
+
+func jumpLessEq(v *vm, a, b, c byte) error {
+	if v.regs[b] <= v.regs[c] {
+		v.code.Seek(int64(v.regs[a]), 0)
+	}
 	return nil
 }
 
