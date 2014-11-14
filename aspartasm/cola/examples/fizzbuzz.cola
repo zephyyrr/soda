@@ -2,29 +2,33 @@
 # Uses the not yet fully implemented labels feature
 # So this will not compile on current 0.8 release
 
-main:
+#main:
 	zero r0 # Zero register
 	zero r1 # Current index
 	ldi r3 3 # For modding with 3
 	ldi r5 5 # For modding with 5
+	ldi r30 1000 #limit
 
-	ldil r10 :loop % Replace with actual addresses to compile
-	ldih r10 :loop
-	ldil r11 :fizz
-	ldih r11 :fizz
-	ldil r12 :buzz
-	ldih r12 :buzz
+	ldil r10 36 #:loop % Replace with actual addresses to compile
+	#ldih r10 :loop
+	ldil r11 76 #:fizz
+	ldil r12 100 # :buzz
+	#ldih r12 :buzz
+	ldil r13 120 #:quit
 
 
-loop:
-	addi r0 1 # Next number in loop
-	mod r2 r1 r5
-	jmpe r12 r2 r0 # Branch to buzz if r1 mod 5 == 0
+#loop:
+	jmpe r13 r1 r30
+	prnci '\n'
+	addi r1 1 # Next number in loop
 	mod r2 r1 r3
-	jmpn r11 r2 r0 # continue if r1 mod 3 != 0
-	#fallthrough to fizz
+	jmpe r11 r2 r0 # jump to fizz if r1 mod 3 == 0
+	mod r2 r1 r5
+	jmpe r12 r2 r0 # Jump to buzz if r1 mod 5 != 0
+	prni r1
+	jmp r10
 
-fizz:
+#fizz:
 	PRNCI 'F'
 	PRNCI 'i'
 	PRNCI 'z'
@@ -33,9 +37,13 @@ fizz:
 	jmpn r10 r2 r0 # continue if r1 mod 5 != 0
 	#fallthorugh to buzz
 
-buzz:
+#buzz:
 	PRNCI 'B'
 	PRNCI 'u'
 	PRNCI 'z'
 	PRNCI 'z'
+	jmp r10
+
+#quit:
+	halt
 	jmp r10
